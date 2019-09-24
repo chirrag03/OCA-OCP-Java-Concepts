@@ -142,6 +142,7 @@ The hashcode value of an object is used by some collection classes. Although you
 Collections such as HashMap and HashSet use the hashcode value of an object to determine how the object should be stored in the collection, and the hashcode is used again to help locate the object in the collection. 
 
 **Understanding Hashcodes**
+
 Consider the implementation of a HashMap. Basically there is an arrayList where each cell represents a bucket and each array index represents a bucketIndex. A bucket is represented using a linkedlist i.e. each cell will be storing a linkedlist.
 
 Whenever a key value pair need to be put, Hashcode of the key determines in which bucket should the key-value pair be inserted. 
