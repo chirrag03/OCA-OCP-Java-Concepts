@@ -191,9 +191,11 @@ So in order for an object to be located, the search object and the object in the
 So you must override both methods to be absolutely certain that your objects can be used in Collections that use hashing.
 
 **The hashCode() Contract**  
-**-Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified.**  
-**-If two objects are equal according to the equals(Object) method, then calling the hashCode() method on each of the two objects must produce the same integer result.**  
-**-It is NOT required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode() method on each of the two objects must produce distinct integer results.**
+**- Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified.**  
+
+**- If two objects are equal according to the equals(Object) method, then calling the hashCode() method on each of the two objects must produce the same integer result.**  
+
+**- It is NOT required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode() method on each of the two objects must produce distinct integer results.**
 
 
 ![Sorry. Image not loaded](./img/hashcode_equals_table.png)
@@ -239,11 +241,11 @@ Here's what could happen using code like the preceding example:
 The Collections Framework in Java, gives you lists, sets, maps, and queues to satisfy most of your coding needs. 
 
 **Basic operations you'll normally use with collections:**  
--Add objects to the collection. 
--Remove objects from the collection. 
--Find out if an object (or group of objects) is in the collection. 
--Retrieve an object from the collection without removing it. 
--Iterate through the collection, looking at each element (object) one after another.
+- Add objects to the collection. 
+- Remove objects from the collection. 
+- Find out if an object (or group of objects) is in the collection. 
+- Retrieve an object from the collection without removing it. 
+- Iterate through the collection, looking at each element (object) one after another.
 
 
 **Key Interfaces and Classes of the Collections Framework**
@@ -257,11 +259,11 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 
 **There are really three overloaded uses of the word "collection":**  
 
--**collection (lowercase c)**, which represents any of the data structures in which objects are stored and iterated over. 
+- **collection (lowercase c)**, which represents any of the data structures in which objects are stored and iterated over. 
 
--**Collection (capital C)** is the java.util.Collection interface (with declarations of the methods common to most collections, including add(), remove(), contains(), size(), and iterator()) from which Set, List, and Queue extend. (That's right, extend, not implement. There are no direct implementations of Collection.) 
+- **Collection (capital C)** is the java.util.Collection interface (with declarations of the methods common to most collections, including add(), remove(), contains(), size(), and iterator()) from which Set, List, and Queue extend. (That's right, extend, not implement. There are no direct implementations of Collection.) 
 
--**Collections (capital C and ends with s)** is the java.util.Collections class that holds a pile of static utility methods for use with collections.
+- **Collections (capital C and ends with s)** is the java.util.Collections class that holds a pile of static utility methods for use with collections.
 
 ![Sorry. Image not loaded](./img/interface_class_hierarchy.png)
 
@@ -271,10 +273,10 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 **Specifically, none of the Map-related classes and interfaces extend from Collection. So while SortedMap, Hashtable, HashMap, TreeMap, and LinkedHashMap are all thought of as collections, none are actually extended from Collection-with-a capital-C.**  
 
 **Collections come in four basic flavors:**  
-**Lists** *Lists of things (classes that implement List)*
-**Sets** *Unique things (classes that implement Set)*
-**Maps** *Things with a unique ID (classes that implement Map)* 
-**Queues** *Things arranged by the order in which they are to be processed* 
+**Lists** *Lists of things (classes that implement List)*  
+**Sets** *Unique things (classes that implement Set)*  
+**Maps** *Things with a unique ID (classes that implement Map)*  
+**Queues** *Things arranged by the order in which they are to be processed*  
 
 ![Sorry. Image not loaded](./img/figure_11-3.png)
 
@@ -287,13 +289,13 @@ A Hashtable collection is not ordered. Although the Hashtable itself has interna
 An ArrayList, keeps the order established by the elements' index position (just like an array).  
 LinkedHashSet keeps the order established by insertion (as opposed to an ArrayList, where you can insert an element at a specific index position). 
 
-**Sorted** 
+**Sorted**  
 A sorted collection means that the collection keeps the elements in order determined according to some rule or rules, known as the sort order.  
 
 Most commonly, the sort order used is the natural order.  
--For a collection of String objects, the natural order is alphabetical order. 
--For Integer objects, the natural order is by numeric value—1 before 2, and so on. 
--There is no natural order for custom objects unless the Foo developer provides one through an interface (Comparable or Comparator) that defines how instances of a class can be compared to one another. 
+- For a collection of String objects, the natural order is alphabetical order. 
+- For Integer objects, the natural order is by numeric value—1 before 2, and so on. 
+- There is no natural order for custom objects unless the Foo developer provides one through an interface (Comparable or Comparator) that defines how instances of a class can be compared to one another.  
 **NOTE:** sort order (including natural order) is not the same as ordering by insertion, access, or index.
 
 
@@ -317,7 +319,7 @@ A LinkedList is ordered by index position, like ArrayList, except that the eleme
 **Set Interface**  
 A Set cares about uniqueness—it doesn't allow duplicates. The equals() method determines whether two objects are identical (in which case, only one can be in the set). 
 
-The three Set implementations are: 
+The three Set implementations are:  
 **HashSet**  
 A HashSet is an unsorted, unordered Set. It uses the hashcode of the object being inserted, so the more efficient your hashCode() implementation, the better access performance you'll get. 
 
