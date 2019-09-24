@@ -1,8 +1,6 @@
 # Generics & Collections
 
 
-Some important methods in class java.lang.Object :
-
 ### toString(), hashCode(), and equals() 
 
 Some important methods in class java.lang.Object :
@@ -12,7 +10,7 @@ Some important methods in class java.lang.Object :
 
 ### The toString() Method
 
-Code calls toString() on your object when it wants to read useful details about your object. For eg, when you pass an object reference to the System.out.println() method, the object's toString() method is called.
+Code calls toString() on your object when it wants to read useful details about your object. For eg, it is invoked when you pass an object reference to the System.out.println() method.
 
 ```java
 
@@ -28,9 +26,9 @@ public class HardToRead {
 HardToRead @a47e0
 
 ```
-Because you don’t override the toString() method of class Object, output is the class name followed by the @ symbol, followed by the unsigned hexadecimal representation of the object’s hashcode.
+Because you don’t override the toString() method of class Object, the output is class name followed by the @ symbol, followed by the unsigned hexadecimal representation of the object’s hashcode.
 
-A readable output by overriding the toString() method in your classes, for example:
+By overriding the toString() method in your classes, we can get a readable output, for example:
 ```java
 public class BobTest {
     public static void main(String[] args) {
@@ -60,26 +58,25 @@ I am a Bob, but you can call me GoBobGo.My shoe size is 19
 ### Overriding equals()
 Common uses of the equals() method:
 
-- Whenever you need to sort or search through a collection of objects, the equals() and hashCode() methods are essential. 
+- To sort or search through a collection of objects, the equals() and hashCode() methods are essential. 
 
 - String class has overridden the equals() method (inherited from the class Object), so you could compare two different String objects to see if their contents are equivalent. 
 
 - There is a wrapper class for every kind of primitive. The folks who created the Integer class decided that if two different Integer instances both hold the int value 5, they are equal. The fact that the value 5 lives in two separate objects doesn't matter.
 
-- To know if two references are identical, use ==. But to know if the attributes of the objects themselves (not the references) are equal, use the equals() method. 
+- To know if two object references are identical, use ==. But to know if the attributes of the objects themselves (not the references) are equal, use the equals() method. 
 
 For each class you write, you must decide if it makes sense to consider two different instances equal. 
 
 ### What It Means If You Don't Override equals()
 
+Unless you override equals(), two objects are considered equal only if the two references refer to the same object, since the equals() method in class Object uses only the == operator for comparisons.
+
 - You won't be able to use those objects as a key in a hashtable 
 - You won't get accurate Sets such that there are no conceptual duplicates. 
 
-The equals() method in class Object uses only the == operator for comparisons, so unless you override equals(), two objects are considered equal only if the two references refer to the same object.
-
-Let's look at what it means to not be able to use an object as a hashtable key. 
-
-Imagine you have a car (say, John's red Subaru Outback as opposed to Mary's purple Mini). Let’s say you add a car instance as the key to the HashMap (along with a corresponding Person object as the value). But now what happens when you want to do a search? You want to say to the HashMap collection, "Here's the car; now give me the Person object that goes with this car." But now you're in trouble unless you still have a reference to the exact object you used as the key when you added it to the Collection. In other words, you can't make an identical Car object and use it for the search.
+**Let's look at what it means to not be able to use an object as a hashtable key.** 
+Imagine you have a car (say, John's red Subaru Outback as opposed to Mary's purple Mini). Let’s say you add a car instance as the key to the HashMap (along with a corresponding Person object as the value). But now what happens when you want to search a Person given a car. But now you're in trouble unless you still have a reference to the exact object you used as the key when you added it to the Collection. In other words, you can't make an identical Car object and use it for the search.
 
 **If you want objects of your class to be used as keys for a hashtable (or as elements in any data structure that uses equivalency for searching for—and/or retrieving—an object), then you must override equals() so that two different instances can be considered the same.**
 
@@ -130,7 +127,6 @@ Second, compare the attributes we care about (in this case, just moofValue).
 Casting the object reference, o, is necessary so that you can access its methods or variables in to do the comparison. Without the cast, you can't compile because the compiler would see the object referenced by o as an Object and the Object class doesn't have a getMoofValue().
 
 **A Java contract is a set of rules that must be followed if you want to provide a "correct" implementation as others will expect it to be. If you don't follow the contract, your code may still compile and run, but your code (or someone else's) may break at runtime in some unexpected way.**
-
 
 **The equals() contract says**
 - It is reflexive. For any reference value x, x.equals(x) should return true. 
