@@ -358,3 +358,212 @@ Since the LinkedList class has been enhanced to implement the Queue interface, b
 ![Sorry. Image not loaded](./img/table_11-2.png)
 
 
+### Using Collections 
+
+## ArrayList Basics
+
+Let's take a look at using an ArrayList that contains strings. In practice, you'll typically want to instantiate an ArrayList polymorphically, like this: 
+
+```java
+List myList = new ArrayList();
+```
+
+As of Java 5, you'll want to say: **List<String> myList = new ArrayList<String>()**  
+
+This kind of declaration follows the object-oriented programming principle of "coding to an interface," and it makes use of generics. (Prior to Java 5, there was no way to specify the type of a collection, and when we cover generics)
+
+In many ways, ArrayList is similar to a String[] in that it declares a container that can hold only strings but some of the advantages ArrayList has over arrays are
+- It can grow dynamically. 
+- It provides more powerful insertion and search mechanisms than arrays.
+
+```java
+List<String> test = new ArrayList<String>(); // declare the ArrayList
+String s = "hi";
+test.add("string"); // add some strings
+test.add(s);
+test.add(s+s);
+System.out.println(test.size()); // use ArrayList methods
+System.out.println(test.contains(42));
+System.out.println(test.contains("hihi"));
+test.remove("hi");
+System.out.println(test.size());
+	
+//which produces
+3
+false
+true
+2
+```
+	
+Notice that when we declared the ArrayList we didn't give it a size. 
+We were able to ask the ArrayList for its size and whether it contained specific objects, we removed an object right out from the middle of it, and then we rechecked its size.
+
+**Autoboxing with Collections**  
+In general, collections can hold Objects but not primitives. 
+
+Prior to Java 5, "wrapper classes" (e.g., Integer, Float, Boolean, and so on) were used to get primitives into and out of collections. 
+
+With Java 5, primitives still have to be wrapped, but autoboxing takes care of it for you.
+
+```java
+//Prior to Java 5
+List myInts = new ArrayList(); // pre Java 5 declaration
+myInts.add(new Integer(42)); // Use Integer to "wrap" an int
+
+//As of Java 5, we can say:
+myInts.add(42); // autoboxing handles it!
+
+```
+
+In the old, pre–Java 5 days, if you wanted to make a wrapper, unwrap it, use it, and then rewrap it, you might do something like this:
+
+```java
+Integer y = new Integer(567); 		// make it
+int x = y.intValue(); 			// unwrap it
+x++; 					// use it
+y = new Integer(x); 			// rewrap it
+System.out.println("y = " + y); 	// print it
+```
+
+Now, with new and improved Java 5, you can say
+
+```java
+Integer y = new Integer(567); 		// make it
+y++; 					// unwrap it, increment it,
+ 					// rewrap it
+System.out.println("y = " + y); 	// print it
+```
+
+Both examples produce the following output:	y = 568  
+
+The code appears to be using the postincrement operator on an object reference variable! But it's simply a convenience. Behind the scenes, the compiler does the unboxing and reassignment for you. Earlier, we mentioned that wrapper objects are immutable… this example appears to contradict that statement. It sure looks like y's value changed from 567 to 568. What actually happened, however, is that a second wrapper object was created and its value was set to 568.
+
+**Proof:**  
+```java
+Integer y = 567; 			// make a wrapper
+Integer x = y; 				// assign a second ref
+ 					// var to THE wrapper
+System.out.println(y==x); 		// verify that they refer
+ 					// to the same object
+y++; 					// unwrap, use, "rewrap"
+System.out.println(x + " " + y); 	// print values
+System.out.println(y==x); 		// verify that they refer
+ 					// to different objects
+
+//Which produces the output:
+true
+ 567 568
+ false
+ 
+//So, under the covers, when the compiler got to the line y++; it had to substitute something like this:
+int x2 = y.intValue(); 			// unwrap it
+x2++; 					// use it
+y = new Integer(x2); 			// rewrap it
+```
+
+**How wrappers work with ==, !=, and equals() ?**  
+The API developers decided that for all the wrapper classes, two objects are equal if they are of the same type and have the same value. It shouldn't be surprising that
+
+```java
+Integer i1 = 1000;
+Integer i2 = 1000;
+if(i1 != i2) System.out.println("different objects");
+if(i1.equals(i2)) System.out.println("meaningfully equal");
+```
+
+produces the output
+```
+different objects
+meaningfully equal
+```
+
+It's just two wrapper objects that happen to have the same value. Because they have the same int value, the equals() method considers them to be "meaningfully equivalent," and therefore returns true. 
+
+**How about this one:**  
+```java
+Integer i3 = 10;
+Integer i4 = 10;
+if(i3 == i4) System.out.println("same object");
+if(i3.equals(i4)) System.out.println("meaningfully equal");
+```
+
+This example produces the output:
+```
+same object
+meaningfully equal
+```
+
+**Yikes! The equals() method seems to be working, but what happened with == and !=? Why is != telling us that i1 and i2 are different objects, when == is saying that i3 and i4 are the same object?**  
+
+In order to save memory, two instances of the following wrapper objects (created through boxing) will always be == when their primitive values are the same:
+- Boolean 
+- Byte 
+- Character from \u0000 to \u007f (7f is 127 in decimal) 
+- Short and Integer from –128 to 127 
+
+**The key to the answer is called object interning. Java interns small numbers (less than 128), so all instances of Integer(n) with n in the interned range are the same. Numbers greater than or equal to 128 are not interned, hence Integer(1000) objects are not equal to each other.**  
+
+**When == is used to compare a primitive to a wrapper, the wrapper will be unwrapped and the comparison will be primitive to primitive.**  
+
+**Where Boxing Can Be Used**  
+It's common to use wrappers in conjunction with collections. Any time you want your collection to hold objects and primitives, you'll want to use wrappers to make those primitives collection-compatible.  
+
+The general rule is that boxing and unboxing work wherever you can normally use a primitive or a wrapped object. The following code demonstrates some legal ways to use boxing
+
+```java
+class UseBoxing {
+    public static void main(String[] args) {
+        UseBoxing u = new UseBoxing();
+        u.go(5);
+    }
+    boolean go(Integer i) { // boxes the int it was passed
+        Boolean ifSo = true; // boxes the literal
+        Short s = 300; // boxes the primitive
+        if (ifSo) { // unboxing
+            System.out.println(++s); // unboxes, increments, reboxes
+        }
+        return !ifSo; // unboxes, returns the inverse
+    }
+}
+```
+
+**Remember, wrapper reference variables can be null. That means you have to watch out for code that appears to be doing safe primitive operations but that could throw a NullPointerException:**  
+
+```java
+class Boxing2 {
+    static Integer x;
+    public static void main(String[] args) {
+        doStuff(x);
+    }
+    static void doStuff(int z) {
+        int z2 = 5;
+        System.out.println(z2 + z);
+    }
+}
+```
+
+This code compiles fine, but the JVM throws a NullPointerException when it attempts to invoke doStuff(x) because x doesn't refer to an Integer object, so there's no value to unbox.
+
+
+### The Java 7 "Diamond" Syntax
+**Prior to Java 7, declaring type-safe collections before diamond syntax:**  
+```java
+ArrayList<String> stuff = new ArrayList<String>();
+List<Dog> myDogs = new ArrayList<Dog>();
+Map<String, Dog> dogMap = new HashMap<String, Dog>();
+```
+
+**As of Java 7, the type parameters duplicated in these declarations could be simplified to.**  
+```java
+ArrayList<String> stuff = new ArrayList<>();
+List<Dog> myDogs = new ArrayList<>();
+Map<String, Dog> dogMap = new HashMap<>();
+```
+
+**Notice that in the simpler Java 7 declarations, the right side of the declaration included the two characters "<>," which together make a diamond shape!**  
+
+
+
+
+
+
