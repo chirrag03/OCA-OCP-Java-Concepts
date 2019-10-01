@@ -1149,7 +1149,7 @@ Similarly, TreeMap now provides pollFirstEntry() and pollLastEntry() to retrieve
 **Descending Order**  
 The important methods are TreeSet.descendingSet() and TreeMap.descendingMap() that return a collection in the reverse order of the collection on which the method was invoked. 
 
-![Sorry. Image not loaded](./img/figure_11-4.png)
+![Sorry. Image not loaded](./img/table_11-4.png)
 
 **Backed Collections**  
 Some of the classes in the java.util package support the concept of "backed collections." Let’s go through an example:
@@ -1283,6 +1283,1023 @@ Finally, we review the remaining elements in the queue.
 ![Sorry. Image not loaded](./img/table_11-6.png)
 
 ![Sorry. Image not loaded](./img/table_11-7.png)
+
+
+### Generic Types
+
+Arrays in Java have always been type-safe—an array declared as type String (String []) can't accept Integers (or ints), Dogs, or anything other than Strings.   
+
+**But remember that before Java 5** there was no syntax for declaring a type-safe collection. To make an ArrayList of Strings, you said,  
+
+```java
+ArrayList myList = new ArrayList();
+```
+or the polymorphic equivalent
+```java
+List myList = new ArrayList();
+```
+
+There was no syntax that let you specify that myList will take only Strings. And with no way to specify a type for the ArrayList, the compiler couldn't enforce that you put only things of the specified type into the list.  
+
+As of Java 5, we can use generics. Generics aren't just for making type-safe collections, think of collections as the motivation for adding generics to the language.  
+
+The biggest challenge for the Java engineers in adding generics to the language was how to deal with legacy code built without generics. So they had to find a way for Java classes with both type-safe (generic) and nontype-safe (nongeneric/pre–Java 5) collections to still work together.   
+
+While you can integrate Java 5 and later generic code with legacy, nongeneric code, the consequences can be disastrous, and unfortunately, most of the disasters happen at runtime, not compile time. Fortunately, though, most compilers will generate warnings to tell you when you're using unsafe (meaning nongeneric) collections.  
+
+
+**The Legacy Way to Do Collections**  
+
+Here's a review of a pre–Java 5 ArrayList intended to hold Strings.   
+
+```java
+List myList = new ArrayList(); 		// can't declare a type
+myList.add("Fred"); 			// OK, it will hold Strings
+myList.add(new Dog()); 			// and it will hold Dogs too
+myList.add(new Integer(42)); 		// and Integers...
+```
+**A non-generic collection can hold any kind of object and the compiler won’t stop you.
+This meant it was entirely up to the programmer to be… careful. Having no way to guarantee collection type wasn't very programmer-friendly for such a strongly typed language.**  
+
+**Since a collection could hold anything, therefore the methods that get objects out of the collection had only one kind of return type—java.lang.Object.**  
+
+That meant that getting a String back out of our only-Strings-intended list required a cast:  
+
+```java
+String s = (String) myList.get(0);
+```
+
+And since you couldn't guarantee that what was coming out really was a String (since you were allowed to put anything in the list), the cast could fail at runtime. 
+
+**So generics takes care of both ends (the putting in and getting out) by enforcing the type of your collections.**
+
+Let's update the String list:
+```java
+List<String> myList = new ArrayList<String>();
+myList.add("Fred"); 					// OK, it will hold Strings
+myList.add(new Dog()); 					// compiler error!!
+```
+
+By using generics syntax— i.e. by putting the type in angle brackets —we're telling the compiler that this collection can hold only String objects. The type in angle brackets is referred to as "parameterized type," "type parameter," or, of course, just old-fashioned "type."   
+
+So now that what you put IN is guaranteed, you can also guarantee what comes OUT, and that means you can get rid of the cast when you get something from the collection.   
+
+```java
+//Instead of
+String s = (String) myList.get(0); // pre-generics, when a String wasn't guaranteed
+
+//we can now just say
+String s = myList.get(0);
+```
+
+The compiler already knows that myList contains only things that can be assigned to a String reference, so now there's no need for a cast.  
+
+And with the new for loop, you can, of course, iterate over the guaranteed-to-be-String list:  
+
+```java
+for (String s : myList) {
+ int x = s.length();
+ // no need for a cast before calling a String method! The
+ // compiler already knew "s" was a String coming from myList
+}
+```
+
+**You can declare a type parameter for a method argument, which then makes the argument a type-safe reference:**
+
+```java
+void takeListOfStrings(List < String > strings) {
+    strings.add("foo"); 			// no problem adding a String
+}
+
+//The previous method would NOT compile if we changed it to
+void takeListOfStrings(List < String > strings) {
+    strings.add(new Integer(42)); 		// NO!! strings is type safe
+}
+```
+
+**Return types can obviously be declared type-safe as well:**
+```java
+public List<Dog> getDogList() {
+ List<Dog> dogs = new ArrayList<Dog>();
+ // more code to insert dogs
+ return dogs;
+}
+```
+
+**The compiler will stop you from returning anything not compatible with a List. And since the compiler guarantees that only a type-safe Dog List is returned, those calling the method won't need a cast to take Dogs from the List:**  
+
+```java
+Dog d = getDogList().get(0); 		// we KNOW a Dog is coming out
+
+
+//With pre–Java 5 nongeneric code, the getDogList() method would be
+public List getDogList() {
+    List dogs = new ArrayList();
+    
+    // code to add only Dogs... fingers crossed...
+    
+    return dogs; // a List of ANYTHING will work here
+}
+
+
+//and the caller would need a cast:
+Dog d = (Dog) getDogList().get(0);
+```
+
+**What if you liked the fact that before generics you could make an ArrayList that could hold any kind of object?**
+
+```java
+List myList = new ArrayList(); 					// old-style, non-generic
+
+//is almost identical to
+List < Object > myList = new ArrayList < Object > (); 		// holds ANY object type
+```
+
+**Declaring a List with a type parameter of <** **Object> makes a collection that works in almost the same way as the original pre–Java 5 nongeneric collection—you can put ANY Object type into the collection. You'll see a little later that nongeneric collections and collections of type <** **Object> aren't entirely the same, but most of the time, the differences do not matter.**  
+
+**Generics and Legacy Code**  
+**How to update nongeneric code to make it generic?**  
+You just add a type in angle brackets (<>) immediately following the collection type in BOTH the variable declaration and the constructor call (or you use the Java 7 diamond syntax), including any place you declare a variable (so that means arguments and return types too).   
+
+```java
+//A pre–Java 5 List meant to hold only Integers:
+List myList = new ArrayList();
+
+//becomes
+List<Integer> myList = new ArrayList<Integer>(); // (or the J7 diamond!)
+
+//and a list meant to hold only Strings goes from
+public List changeStrings(ArrayList s) { }
+//to this:
+public List<String> changeStrings(ArrayList<String> s) { }
+
+
+//If there's code that used the nongeneric version & performed cast to get things out, that won't break anyone's code:
+Integer i = (Integer) list.get(0); 	// cast no longer needed, but it won't hurt 
+```
+
+**Mixing Generic and Nongeneric Collections**  
+
+**CASE I**  
+Imagine we have an ArrayList of type Integer and we're passing it into a method ( we cannot modify) and it accepts nongeneric arguments. Will this work?
+
+```java
+// a Java 5 or later class using a generic collection
+import java.util.*;
+public class TestLegacy {
+    public static void main(String[] args) {
+        List < Integer > myList = new ArrayList < Integer > ();
+        // type safe collection
+        myList.add(4);
+        myList.add(6);
+        Adder adder = new Adder();
+        int total = adder.addAll(myList);
+        // pass it to an untyped argument
+        System.out.println(total);
+    }
+}
+
+//The older nongenerics class we want to use:
+import java.util.*;
+class Adder {
+    int addAll(List list) {
+        // method with a non-generic List argument,
+        // but assumes (with no guarantee) that it will be Integers
+        Iterator it = list.iterator();
+        int total = 0;
+        while (it.hasNext()) {
+            int i = ((Integer) it.next()).intValue();
+            total += i;
+        }
+        return total;
+    }
+}
+```
+
+Yes, this works just fine.  
+In this example, the addAll() legacy method assumed that the list passed in was indeed restricted to Integers, even though when the code was written, there was no guarantee. It was up to the programmers to be careful.  
+
+**There was no risk to the caller's code, but the legacy method might have blown up if the list passed in contained anything but Integers (which would cause a ClassCastException).**
+
+
+**CASE II**  
+Imagine that you call a legacy method that doesn't just read a value, but adds something to the ArrayList. Will this work?
+
+```java
+import java.util.*;
+public class TestBadLegacy {
+    public static void main(String[] args) {
+        List < Integer > myList = new ArrayList < Integer > ();
+        myList.add(4);
+        myList.add(6);
+        Inserter in = new Inserter(); in .insert(myList); 	// pass List<Integer> to legacy code
+    }
+}
+class Inserter {
+    // method with a non-generic List argument
+    void insert(List list) {
+        list.add(new Integer(42)); 				// adds to the incoming list
+    }
+}
+```
+
+This code works. It compiles, and it runs. The insert() method puts an Integer into the list that was originally typed as , so no problem. But… what if we modify the insert() method like this:  
+
+```java
+void insert(List list) {
+ list.add(new String("42"));  		// put a String in the list passed in
+}
+```
+
+**Will that work?** Yes, sadly, it does! It both compiles and runs. No runtime exception.   
+
+**Someone added a String into a type-safe ArrayList of type Integer. How can that be?**  
+Remember, the older legacy code was allowed to put anything at all (except primitives) into a collection. And in order to support legacy code, Java 5 and Java 6 allow your newer type-safe code to make use of older code.  
+
+So, the Java 5 compiler onwards, the compiler is forced into letting you compile your new type-safe code even though your code invokes a method of an older class that takes a nontype-safe argument and does who knows what with it.  
+
+In fact, the compiler will generate a warning that you're taking a risk sending your type-safe ArrayList into a dangerous method that can have its way with your list and put in Floats, Strings, or even Dogs.  
+
+```java
+javac TestBadLegacy.java
+Note: TestBadLegacy.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+```
+
+**Remember that compiler warnings are NOT considered a compiler failure.**
+
+**Note:** BOTH versions of the insert() method (one that adds an Integer and one that adds a String), the compiler issues warnings.   
+The compiler does NOT know whether the insert() method is adding the right thing (Integer) or the wrong thing (String). The reason the compiler produces a warning is because the method is ADDING something to the collection.
+
+**Compiler issues a warning, but why does the code RUN?**  
+
+**Why does the JVM let old code add a String into your ArrayList without any problems or exceptions at all?**  
+
+Just a quiet, behind-the-scenes, total violation of your type safety that you might not discover until the worst possible moment.  
+
+At runtime, ALL collection code—both legacy and new Java 5 code you write using generics—looks exactly like the pregeneric version of collections. None of your typing information exists at runtime.   
+
+Think of generics as strictly a compile-time protection. The compiler uses generic type information (the in the angle brackets) to make sure that your code doesn't put the wrong things into a collection and that you do not assign what you get from a collection to the wrong reference type.   
+But NONE of this protection or the typing information exists at runtime. The JVM has no idea that your ArrayList was supposed to hold only Integers.   
+
+Through a process called "type erasure," the compiler does all of its verifications on your generic code and then strips the type information out of the class bytecode.   
+
+This is a little different from arrays, which give you BOTH compile-time protection and runtime protection. **Why did they do generics this way? Why is there no type information at runtime?** To support legacy code. At runtime, collections are collections just like the old days.   
+
+In other words, even though you WROTE
+```java
+List<Integer> myList = new ArrayList<Integer>();
+```
+by the time the compiler is done with it, the JVM sees what it always saw before Java 5 and generics:
+```java
+List myList = new ArrayList();
+```
+
+**What you gain from using generics ?**
+- Compile-time protection that guarantees you won't put the wrong thing into a typed collection. 
+- It also eliminates the need for a cast when you get something out, since the compiler already knows that only an Integer is coming out of an Integer list and hence the compiler itself inserts this cast.
+
+**The fact is, you don't NEED runtime protection… until you start mixing up generic and nongeneric code, as we did in the previous example.** Then you can have disasters at runtime. The only advice we have is to pay very close attention to those compiler warnings:
+
+```java
+javac TestBadLegacy.java
+Note: TestBadLegacy.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+```
+
+This compiler warning isn't very descriptive, but you can recompile with -Xlint:unchecked. 
+If you do, you'll get something like this:
+
+```java
+javac -Xlint:unchecked TestBadLegacy.java
+TestBadLegacy.java:17: warning: [unchecked] unchecked call to add(E)
+as a member of the raw type java.util.List
+ list.add(new String("42"));
+ ^
+1 warning
+```
+
+When you compile with the -Xlint:unchecked flag, the compiler shows you exactly which method(s) might be doing something dangerous. In this example, since the list argument was not declared with a type, the compiler treats it as legacy code and assumes no risk for what the method puts into the "raw" list.  
+
+No type violations will be caught at runtime by the JVM, until those type violations mess with your code in some other way.  
+
+From the previous example, imagine you want your code to pull something out of your supposedly type-safe Integer ArrayList that older code put a String into. It compiles (with warnings). It runs… or at least the code that actually adds the String to the list runs. But when you take the String that wasn't supposed to be there out of the list and try to assign it to an Integer reference or invoke an Integer method, you're dead.  
+
+Keep in mind, then, that the problem of putting the wrong thing into a typed (generic) collection does not show up at the time you actually do the add() to the collection. It only shows up later, when you try to use something in the list and it doesn't match what you were expecting. In the old (pre–Java 5) days, you always assumed that you might get the wrong thing out of a collection (since they were all nontype-safe), so you took appropriate defensive steps in your code.   
+
+**Just remember that the moment you turn that type-safe collection over to older, nontype-safe code, your protection vanishes.**  
+
+**When using legacy (nontype-safe) collections, watch out for unboxing problems!**   
+
+If you declare a nongeneric collection, the get() method ALWAYS returns a reference of type java.lang.Object. Remember that unboxing can't convert a plain old Object to a primitive, even if that Object reference refers to an Integer (or some other wrapped primitive) on the heap. Unboxing converts only from a wrapper class reference (like an Integer or a Long) to a primitive.  
+
+```java
+List test = new ArrayList();
+test.add(43);
+int x = (Integer)test.get(0); 			// you must cast !!
+
+List<Integer> test2 = new ArrayList<Integer>();
+test2.add(343);
+int x2 = test2.get(0); 				// cast not necessary
+```
+
+**Polymorphism and Generics**
+Generic collections give you the same benefits of type safety that you've always had with arrays, but there is a crucial difference.  
+
+Polymorphism applies to the "base" type of the collection:  
+
+```java
+List<Integer> myList = new ArrayList<Integer>();
+```
+
+We can assign an ArrayList to a List reference because List is a supertype of ArrayList. This polymorphic assignment works the way it always works in Java, regardless of generic typing.
+
+
+**But what about this?**
+
+```java
+class Parent { }
+class Child extends Parent { }
+List<Parent> myList = new ArrayList<Child>();
+//Above code doesn't work
+
+
+//These are wrong:
+List<Object> myList = new ArrayList<JButton>(); // NO!
+List<Number> numbers = new ArrayList<Integer>(); // NO! remember that Integer is a subtype of Number
+
+
+//But these are fine:
+List<JButton> bList = new ArrayList<JButton>(); // yes
+List<Object> oList = new ArrayList<Object>(); // yes
+List<Integer> iList = new ArrayList<Integer>(); // yes
+```
+
+**Just keep the generic type of the reference and the generic type of the object to which it refers identical. Polymorphism applies here to only the "base" type i.e. the type of the collection class itself.**  
+
+In this code,  
+```java
+List<JButton> myList = new ArrayList<JButton>();
+``` 
+List and ArrayList are the base type and JButton is the generic type. So an ArrayList can be assigned to a List, but a collection of <JButton> cannot be assigned to a reference of <Object>, even though JButton is a subtype of Object.  
+	
+This is NOT how it works with arrays, where you are allowed to do this:
+
+```java
+import java.util.*;
+class Parent {}
+class Child extends Parent {}
+public class TestPoly {
+    public static void main(String[] args) {
+        Parent[] myArray = new Child[3]; 		// yes
+    }
+}
+
+//which means you're also allowed to do this:
+Object[] myArray = new JButton[3]; 			// yes
+
+//but not this:
+List < Object > list = new ArrayList < JButton > (); 	// NO!
+```
+
+**Polymorphism does not work the same way for generics as it does with arrays.** Why are the rules for typing of arrays different from the rules for generic typing?   
+
+**Generic Methods**  
+One of the benefits of polymorphism is that you can declare, say, a method argument of a particular type and at runtime be able to have that argument refer to any subtype.  
+
+Consider a polymorphism example.   
+There are three Animal subtypes—Dog, Cat, and Bird—each implementing the abstract checkup() method from Animal.  
+The AnimalDoctor class, has a polymorphic method, that takes any type of animal array (Dog[], Cat[], Bird[]) and invokes the Animal checkup() method on each animal.  
+
+```java
+import java.util.*;
+abstract class Animal {
+    public abstract void checkup();
+}
+class Dog extends Animal {
+    public void checkup() { 		// implement Dog-specific code
+        System.out.println("Dog checkup");
+    }
+}
+class Cat extends Animal {
+    public void checkup() { 		// implement Cat-specific code
+        System.out.println("Cat checkup");
+    }
+}
+class Bird extends Animal {
+    public void checkup() { 		// implement Bird-specific code
+        System.out.println("Bird checkup");
+    }
+}
+public class AnimalDoctor {
+    // method takes an array of any animal subtype
+    public void checkAnimals(Animal[] animals) {
+        for (Animal a: animals) {
+            a.checkup();
+        }
+    }
+    public static void main(String[] args) {
+        // test it
+        Dog[] dogs = {new Dog(), new Dog()};
+        Cat[] cats = {new Cat(), new Cat(), new Cat()};
+        Bird[] birds = {new Bird()};
+	
+        AnimalDoctor doc = new AnimalDoctor();
+        doc.checkAnimals(dogs); 		// pass the Dog[]
+        doc.checkAnimals(cats); 		// pass the Cat[]
+        doc.checkAnimals(birds); 		// pass the Bird[]
+    }
+}
+```
+
+This works fine, of course. But this approach does NOT work the same way with type-safe collections!  
+
+Let's try changing the AnimalDoctor code to use generics instead of arrays:  
+
+```java
+public class AnimalDoctorGeneric {
+    // change the argument from Animal[] to ArrayList<Animal>
+    public void checkAnimals(ArrayList < Animal > animals) {
+        for (Animal a: animals) {
+            a.checkup();
+        }
+    }
+    public static void main(String[] args) {
+        // make ArrayLists instead of arrays for Dog, Cat, Bird
+        List < Dog > dogs = new ArrayList < Dog > ();
+        dogs.add(new Dog());
+        dogs.add(new Dog());
+	
+        List < Cat > cats = new ArrayList < Cat > ();
+        cats.add(new Cat());
+        cats.add(new Cat());
+	
+        List < Bird > birds = new ArrayList < Bird > ();
+        birds.add(new Bird());
+	
+        // this code is the same as the Array version
+        AnimalDoctorGeneric doc = new AnimalDoctorGeneric();
+	
+        // this worked when we used arrays instead of ArrayLists
+        doc.checkAnimals(dogs); 	// send a List<Dog>
+        doc.checkAnimals(cats); 	// send a List<Cat>
+        doc.checkAnimals(birds); 	// send a List<Bird>
+    }
+}
+
+//So what does happen?
+javac AnimalDoctorGeneric.java
+AnimalDoctorGeneric.java:51: checkAnimals(java.util.ArrayList<Animal>)
+in AnimalDoctorGeneric cannot be applied to (java.util.List<Dog>)
+ doc.checkAnimals(dogs);
+ ^
+ AnimalDoctorGeneric.java:52: checkAnimals(java.util.ArrayList<Animal>)
+in AnimalDoctorGeneric cannot be applied to (java.util.List<Cat>)
+ doc.checkAnimals(cats);
+ ^
+AnimalDoctorGeneric.java:53: checkAnimals(java.util.ArrayList<Animal>)
+in AnimalDoctorGeneric cannot be applied to (java.util.List<Bird>)
+ doc.checkAnimals(birds);
+ ^
+3 errors
+```
+The compiler stops us with errors, not warnings. You simply CANNOT assign the individual ArrayLists of Animal subtypes (<Dog>, <Cat>, or <Bird>) to an ArrayList of the supertype , which is the declared type of the argument.  
+The ONLY thing you can pass to a method argument of ArrayList<Animal> is an ArrayList<Animal>! 
+	
+**Distinction between typed arrays and typed collections.**  
+According to the polymorphism assignment rules, a method that takes an ArrayList<Animal> will NOT be able to accept a collection of any Animal subtype! That means ArrayList<Dog> cannot be passed into a method with an argument of ArrayList<Animal>, even though we know that this works fine with plain old arrays.  
+
+So we have two real issues:  
+1. Why doesn't this work? 			2. How do you get around it?
+
+**We'll answer the questions, but first, let's consider this perfectly legal scenario:**
+We can add an instance of a subtype into an array or collection declared with a supertype. So this part works with both arrays and generic collections.
+
+```java
+Animal[] animals = new Animal[3];
+animals[0] = new Cat();
+animals[1] = new Dog();
+
+List<Animal> animals = new ArrayList<Animal>();
+animals.add(new Cat()); // OK
+animals.add(new Dog()); // OK
+```
+
+Using an abstract supertype for array declaration allows the array to hold objects of multiple subtypes of the supertype, and then everything in it can respond to method calls defined in the Animal interface. So here, we're using polymorphism not for the object that the array reference points to, but rather what the array can actually HOLD—in this case, any subtype of Animal.  
+
+**The question is still out there—Why can't you pass an ArrayList<** **Dog> into a method with an argument of ArrayList<** **Animal>? Why is it bad for ArrayList but not arrays?**   
+
+Actually, the problem IS just as dangerous whether you're using arrays or a generic collection. It's just that the compiler and JVM behaves differently for arrays versus generic collections.  
+
+**The reason it is dangerous to pass a collection (array or ArrayList) of a subtype into a method that takes a collection of a supertype is because you might add something WRONG!** Consider the example:  
+
+```java
+public void foo() {
+ Cat[] cats = {new Cat(), new Cat()};
+ addAnimal(cats); 		// no problem, send the Cat[] to the method
+}
+
+public void addAnimal(Animal[] animals) {
+ animals[0] = new Dog(); 	// Eeek! We just put a Dog in a Cat array!
+}
+```
+
+The compiler thinks it is perfectly fine to add a Dog to an Animal[] array, since a Dog can be assigned to an Animal reference. The problem is that if you passed in an array of an Animal subtype (Cat, Dog, or Bird) at runtime, the compiler does not know.   
+
+**THIS is the scenario we're trying to prevent, regardless of whether it's an array or an ArrayList. The difference is that the compiler lets you get away with it for arrays, but not for generic collections.**  
+
+**Why the heck does the compiler allow you to take that risk for arrays but not for ArrayList (or any other generic collection)?**  
+
+The reason you can get away with compiling this for arrays is that there is a runtime exception (ArrayStoreException) that will prevent you from putting the wrong type of object into an array. If you send a Dog array into the method that takes an Animal array and you add only Dogs (including Dog subtypes, of course) into the array now referenced by Animal, no problem. But if you DO try to add a Cat to the object that is actually a Dog array, you'll get an exception.  
+
+But there IS no equivalent exception for generics because of type erasure! In other words, at runtime, the JVM KNOWS the type of arrays, but does NOT know the type of a collection. All the generic type information is removed during compilation, so by the time it gets to the JVM, there is simply no way to recognize the disaster of putting a Cat into an ArrayList and vice versa (and it becomes exactly like the problems you have when you use legacy, nontype-safe code).  
+
+So this actually IS legal code:  
+
+```java
+public void addAnimal(List < Animal > animals) {
+    animals.add(new Dog()); 	// this is always legal, since Dog can be assigned to an Animal reference
+}
+
+public static void main(String[] args) {
+    List < Animal > animals = new ArrayList < Animal > ();
+    animals.add(new Dog());
+    animals.add(new Dog());
+    AnimalDoctorGeneric doc = new AnimalDoctorGeneric();
+    doc.addAnimal(animals); 	// OK, since animals matches the method arg
+}
+ ```
+ 
+ As long as the only thing you pass to the addAnimals(List<Animal>) is an ArrayList<Animal>, the compiler is pleased—knowing that any Animal subtype you add will be valid (you can always add a Dog to an Animal collection, yada, yada, yada).   
+But if you try to invoke addAnimal() with an argument of any OTHER ArrayList type, the compiler will stop you, since at runtime the JVM would have no way to stop you from adding a Dog to what was created as a Cat collection.  
+	
+	
+**How do we get around this?**  
+If the problem is related only to the danger of adding the wrong thing to the collection, but what about the checkup() method that used the collection passed in as read-only? What about methods that invoke Animal methods on each thing in the collection & which work regardless of which kind of ArrayList subtype is passed in?  
+
+**Wildcard with extends keyword**  
+Wildcard <?> tells the compiler that you can take any generic subtype of the declared argument type because you won't put anything in collection (or use the add() method)   
+
+```java
+//The method signature would change from
+
+public void addAnimal(List<Animal> animals)
+
+//to
+
+public void addAnimal(List<? extends Animal> animals)
+```
+
+By saying <? extends Animal>, we're saying,   
+- "I can be assigned a collection that is a subtype of List and typed for <Animal> or anything that extends Animal.”   
+- “Also that I'm using the collection passed in just to invoke methods on the elements—and I promise not to ADD anything into the collection"   
+	
+The addAnimal() method shown previously won't actually compile, even with the wildcard notation, because that method DOES add something.  
+
+```java
+public void addAnimal(List<? extends Animal> animals) {
+ animals.add(new Dog()); 	// NO! Can't add if we use <? extends Animal>
+}
+
+//You'll get a very strange error that might look something like this:
+javac AnimalDoctorGeneric.java
+AnimalDoctorGeneric.java:38: cannot find symbol
+symbol : method add(Dog)
+location: interface java.util.List<capture of ? extends Animal>
+ animals.add(new Dog());
+ ^
+1 error
+
+//which basically says, "you can't add a Dog here." 
+```
+
+**Important Note:**  
+The <? extends Animal> means that you can take any subtype of Animal; 
+however, that subtype can be EITHER  
+- a subclass of an abstract or concrete class specified after the word extends  
+OR
+- a type that implements the interface specified after the word extends.  
+
+**So there is only ONE wildcard keyword “extends” that represents both interface implementations and subclasses. But when you see it, think "IS-A," as in something that passes the instanceof test.**  
+
+There is no <? Implements Serializable> syntax. If you want to declare a method that takes anything that is of a type that implements Serializable, you'd still use extends like this:  
+
+```java
+void foo(List<? extends Serializable> list) // odd, but correct to use "extends"
+ ```
+ ---
+ 
+**Wildcard with super keyword**  
+Scenario where you can use a wildcard AND still add to the collection in a safe way.
+
+**Imagine, for example, that you declared the method this way:**  
+```java
+public void addAnimal(List<? super Dog> animals) {
+ animals.add(new Dog()); // adding is sometimes OK with super
+}
+public static void main(String[] args) {
+ List<Animal> animals = new ArrayList<Animal>();
+ animals.add(new Dog());
+ animals.add(new Dog());
+ AnimalDoctorGeneric doc = new AnimalDoctorGeneric();
+ doc.addAnimal(animals); // passing an Animal List
+}
+```
+
+By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog."  
+
+This is the key part that makes it work—since a collection declared as any supertype of Dog will be able to accept a Dog as an element. So passing any of the following will work:  
+List<Object> can take a Dog.   
+List<Animal> can take a Dog.   
+List<Dog> can take a Dog.   
+
+So the super keyword in wildcard notation lets you have a restricted, but still possible, way to add to a collection.  
+So, the wildcard gives you polymorphic assignments, but with certain restrictions that you don't have for arrays.   
+
+**What is the difference between the two?**  
+```java
+public void foo(List<?> list) { }
+public void foo(List<Object> list) { }
+```
+
+List<Object> is completely different from List<?>  
+
+Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of <Dog>, <Integer>, <JBButton>, <Socket> whatever.   
+
+Also, as we are using the wildcard without the keyword super, means that you cannot ADD anything to the list referred to as List<?>.  
+
+List<Object> means that the method can take ONLY a List<Object>. Not a List<Dog> or a List<Cat>. It does, however, mean that you can add to the list, since the compiler has already made certain that you're passing only a valid List<Object> into the method.  
+	
+**Figure out if the following will work?**
+```java
+import java.util.*;
+public class TestWildcards {
+    public static void main(String[] args) {
+        List < Integer > myList = new ArrayList < Integer > ();
+        Bar bar = new Bar();
+        bar.doInsert(myList);
+    }
+    class Bar {
+        void doInsert(List << ? > list) {
+            list.add(new Dog());
+        }
+    }
+}
+```
+
+The <?> wildcard allows a list of ANY type to be passed to the method, but the add() method is not valid, for the reasons we explored earlier (that you could put the wrong kind of thing into the collection). So this time, the TestWildcards class is fine, but the Bar class won't compile because it does an add() in a method that uses a wildcard (without super).   
+
+What if we change the doInsert() method to this:  
+```java
+import java.util.*;
+public class TestWildcards {
+    public static void main(String[] args) {
+        List < Integer > myList = new ArrayList < Integer > ();
+        Bar bar = new Bar();
+        bar.doInsert(myList);
+    }
+}
+class Bar {
+    void doInsert(List < Object > list) {
+        list.add(new Dog());
+    }
+}
+```
+
+This time, class Bar, with the doInsert() method, compiles just fine. The problem is that the TestWildcards code is trying to pass a List<Integer> into a method that can take ONLY a List<Object>. And nothing else can be substituted for <Object>.  
+	
+**By the way, List<? extends Object> and List<?> are absolutely identical!**   
+
+**Keep in mind that wildcards can be used only for reference declarations (including arguments, variables, return types, and so on). They can't be used as the type parameter when you create a new typed collection.** Think about that—while a reference can be abstract and polymorphic, the actual object created must be of a specific type. You have to lock down the type when you make the object using new.  
+
+**Look at the following statements and figure out which will compile:**  
+
+1) List<?> list = new ArrayList<Dog>();
+2) List<? extends Animal> aList = new ArrayList<Dog>();
+3) List<?> foo = new ArrayList<? extends Animal>();
+4) List<? extends Dog> cList = new ArrayList<Integer>();
+5) List<? super Dog> bList = new ArrayList<Animal>();
+6) List<? super Animal> dList = new ArrayList<Dog>();
+
+The correct answers (the statements that compile) are 1, 2, and 5.  
+The three that won't compile are  
+- **Statement** List<?> foo = new ArrayList<? extends Animal>();
+
+- **Problem** You cannot use wildcard notation in the object creation. So the new ArrayList<? extends Animal>() will not compile.
+
+- **Statement** List<? extends Dog> cList = new ArrayList<Integer>();
+	
+- **Problem** You cannot assign an Integer list to a reference that takes only a Dog (including any subtypes of Dog, of course).
+
+- **Statement** List<? super Animal> dList = new ArrayList<Dog>();
+	
+- **Problem** You cannot assign a Dog to <? super Animal>. The Dog is too "low" in the class hierarchy. Only <Animal> or <Object> would have been legal.
+	
+
+### Generic Declarations
+
+**How do we even know that we're allowed/supposed to specify a type for these collection classes? And does generic typing work with any other classes in the API?**  
+
+The API tells you when a parameterized type is expected. For example, this is the API declaration for the java.util.List interface:  
+
+```java
+public interface List<E>
+```
+
+The <E> is a placeholder for the type you pass in. The List interface is behaving as a generic "template", and when you write your code, you change it from a generic List to a List<Dog> or List<Integer>, and so on.  
+
+The E, by the way, is only a convention. Any valid Java identifier would work here, but E stands for "Element," and it's used when the template is a collection. The other main convention is T (stands for "type"), used for, well, things that are NOT collections.  
+
+**What do you think the add() method in the List interface looks like?**
+	**boolean add(E o)**  
+In other words, whatever E is when you declare the List, that's what you can add to it.  
+
+**For eg: List<** **Animal> list = new ArrayList<** **Animal>();**  
+ 
+At the time of declaration and instantiation of the ArrayList, we pass the placeholder E as Animal. For a List of Animals, the add() method of List must obviously behave like this: 
+	**boolean add(Animal a)**  
+
+**When you look at the API for a generics class or interface, pick a type parameter (Dog, JButton, even Object) and do a mental find and replace on each instance of E (or whatever identifier is used as a placeholder for the type parameter).**  
+
+
+**Making Your Own Generic Class**  
+
+**Imagine someone created a class Rental that manages a pool of rentable items:**
+```java
+public class Rental {
+    private List rentalPool;
+    private int maxNum;
+    public Rental(int maxNum, List rentalPool) {
+        this.maxNum = maxNum;
+        this.rentalPool = rentalPool;
+    }
+    public Object getRental() {
+        // blocks until there's something available
+        return rentalPool.get(0);
+    }
+    public void returnRental(Object o) {
+        rentalPool.add(o);
+    }
+}
+```
+
+**Now imagine you wanted to make a subclass of Rental that was just for renting cars.**
+```java
+import java.util.*;
+public class CarRental extends Rental {
+    public CarRental(int maxNum, List < Car > rentalPool) {
+        super(maxNum, rentalPool);
+    }
+    public Car getRental() {
+        return (Car) super.getRental();
+    }
+    public void returnRental(Car c) {
+        super.returnRental(c);
+    }
+    public void returnRental(Object o) {
+        if (o instanceof Car) {
+            super.returnRental(o);
+        } else {
+            System.out.println("Cannot add a non-Car");
+            // probably throw an exception
+        }
+    }
+}
+```
+
+**But then, the more you look at it, the more you realize**  
+1. You are doing your own type checking in the returnRental() method. You can't change the argument type of returnRental() to take a Car, since it's an override (not an overload) of the method from class Rental. (Overloading would take away your polymorphic flexibility with Rental.)   
+2. You really don't want to make separate subclasses for every possible kind of rentable thing (cars, computers, bowling shoes, children, and so on).   
+
+**You can make the Rental class a generic type—a template for any kind of Rentable thing—and you're good to go.**  
+
+**So here's your new and improved generic Rental class:**  
+
+```java
+import java.util.*;
+public class RentalGeneric < T > { 		// "T" is for the type parameter
+    private List < T > rentalPool; 		// Use the class type for the List type
+    private int maxNum;
+    public RentalGeneric(
+        int maxNum, List < T > rentalPool) { 	// constructor takes a List of the class type
+        this.maxNum = maxNum;
+        this.rentalPool = rentalPool;
+    }
+    public T getRental() { 			// we rent out a T 
+    	//blocks until there's something available
+        return rentalPool.get(0);
+    }
+    public void returnRental(T returnedThing) { // and the renter returns a T
+        rentalPool.add(returnedThing);
+    }
+}
+
+//Let's put it to the test:
+class TestRental {
+    public static void main(String[] args) {
+        //make some Cars for the pool
+        Car c1 = new Car();
+        Car c2 = new Car();
+	
+        List < Car > carList = new ArrayList < Car > ();
+        carList.add(c1);
+        carList.add(c2);
+	
+        RentalGeneric < Car > carRental = new RentalGeneric < Car > (2, carList);
+        
+	// now get a car out, and it won't need a cast
+        Car carToRent = carRental.getRental();
+        carRental.returnRental(carToRent);
+        
+	// can we stick something else in the original carList?
+        carList.add(new Cat("Fluffy"));
+    }
+}
+```
+**We get an error when we try to add a Cat:**
+
+```java
+kathy% javac1.5 RentalGeneric.java
+RentalGeneric.java:38: cannot find symbol
+symbol : method add(Cat)
+location: interface java.util.List<Car>
+ carList.add(new Cat("Fluffy"));
+ ^
+1 error
+```
+
+**Now we have a Rental class that can be typed to whatever the programmer chooses, and the compiler will enforce it. In other words, it works just as the Collections classes do.**  
+
+**Let's look at more examples of generic syntax.**  
+
+**Here's a class that uses the parameterized type of the class:**  
+```java
+public class TestGenerics < T > { 	// as the class type
+    T anInstance; 			// as an instance variable type
+    T[] anArrayOfTs; 			// as an array type
+    TestGenerics(T anInstance) { 	// as an argument type
+        this.anInstance = anInstance;
+    }
+    T getT() { 				// as a return type
+        return anInstance;
+    }
+}
+```
+
+**You can use more than one parameterized type in a single class definition:**  
+```java
+public class UseTwo < T, X > {
+    T one;
+    X two;
+    UseTwo(T one, X two) {
+        this.one = one;
+        this.two = two;
+    }
+    T getT() {
+        return one;
+    }
+    X getX() {
+        return two;
+    }
+    // test it by creating it with <String, Integer>
+    public static void main(String[] args) {
+        UseTwo < String, Integer > twos =
+            new UseTwo < String, Integer > ("foo", 42);
+        String theT = twos.getT(); // returns a String
+        int theX = twos.getX(); // returns Integer, unboxes to int
+    }
+}
+ ```
+
+**Using a wildcard notation in a class definition to specify a range (called "bounds") for the type that can be used for the type parameter:**  
+```java
+public class AnimalHolder < T extends Animal > {  			// use "T" instead of "?"
+    T animal;
+    public static void main(String[] args) {
+        AnimalHolder < Dog > dogHolder = new AnimalHolder < Dog > (); 	// OK
+        AnimalHolder < Integer > x = new AnimalHolder < Integer > (); 	// NO!
+    }
+}
+```
+
+**Creating Generic Methods**  
+Until now, every eg we've seen uses class parameter type—the type declared with the class name. For eg, the UseTwo declaration, uses the T and X placeholders throughout the code. **But it's possible to define a parameterized type at a more granular level—a method.**  
+
+**Imagine you want to create a method that takes an instance of any type, instantiates an ArrayList of that type, and adds the instance to the ArrayList. The class itself doesn't need to be generic; basically, we just want a utility method that we can pass a type to and that can use that type to construct a type-safe collection.**  
+
+For example:  
+```java
+import java.util.*;
+public class CreateAnArrayList {
+
+    // take an object of an unknown type and use a "T" to represent the type
+    public < T > void makeArrayList(T t) { 
+        List < T > list = new ArrayList < T > (); // now we can create the list using "T"
+        list.add(t);
+    }
+}
+```
+
+**Using a generic method, allows to declare a method without a specific type and then get the type information based on the type of the object passed to the method.**  
+
+Invoking the makeArrayList() method with a Dog instance, the method will behave like this:
+**(not in the bytecode, remember—we're describing how it appears to behave, not how it actually gets it done).**  
+
+```java
+public void makeArrayList(Dog t) {
+ List<Dog> list = new ArrayList<Dog>();
+ list.add(t);
+}
+```
+
+---
+
+**The strangest thing about generic methods is that you must declare the type variable BEFORE the return type of the method:**  
+
+```java
+public <T> void makeArrayList(T t)
+```
+
+**The <** **T> before void simply defines what T is before you use it as a type in the argument. You _MUST_ declare the type like that unless type is specified for the class.**
+
+In CreateAnArrayList, the class is not generic, so there's no type parameter placeholder we can use. So we declared a type parameter before the method return type.
+
+---
+
+**You can put boundaries on the type you declare.** For eg, if you want to restrict the makeArrayList() method to only Number or its subtypes (Integer, Float, and so on):
+
+```java
+public <T extends Number> void makeArrayList(T t)
+```
+
+**Key Points**  
+
+**1) In order to use a type variable like T, you must have declared it either as the class parameter type or in the method, before the return type.**  
+It's tempting to forget that the method argument is NOT where you declare the type parameter variable T. 
+```java
+public void makeList(T t) { }
+```
+Only way for this to be legal is if there is actually a class named T, in which case the argument is like any other type declaration for a variable. 
+
+**2) What about constructor arguments?**   
+They, too, can be declared with a generic type, but then it looks even stranger, since constructors have no return type at all:  
+```java
+public class Radio {
+ public <T> Radio(T t) { } // legal constructor
+}
+```
+
+**3) There is no naming conflict between class names, type parameter placeholders, and variable identifiers.**
+```java
+class X { public <X> X(X x) { } }
+```
+The X that is the constructor name has no relationship to the type declaration, which has no relationship to the constructor argument identifier, which is also, of course, X. The compiler is able to parse this and treat each of the different uses of X independently.  
+
+**4) One of the most common mistakes programmers make when creating generic classes or methods is to use a <** **?> in the wildcard syntax rather than a type variable <** **T>, <** **E>, and so on. This code might look right, but isn't:**
+```java
+public class NumberHolder<? extends Number> { }
+
+public class NumberHolder<?> { ? aNum; } 
+```
+
+**While the question mark works when declaring a reference for a variable, it does NOT work for generic class and method declarations.**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
