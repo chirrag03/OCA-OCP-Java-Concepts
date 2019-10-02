@@ -533,7 +533,7 @@ class UseBoxing {
 ```
 This code compiles fine, but the JVM throws a NullPointerException when it attempts to invoke doStuff(x) because x doesn't refer to an Integer object, so there's no value to unbox.
 
-### The Java 7 "Diamond" Syntax
+## The Java 7 "Diamond" Syntax
 **Prior to Java 7, declaring type-safe collections before diamond syntax:**  
 ```java
 ArrayList<String> stuff = new ArrayList<String>();
@@ -555,7 +555,7 @@ Map<String, Dog> dogMap = new HashMap<>();
 Both collections and arrays can be sorted and searched using methods in the API.
 
 ### Sorting Collections
-Let's start with something simple, like sorting an ArrayList of strings alphabetically. 
+Let's start with sorting an ArrayList of strings alphabetically. 
 The java.util.Collections class does provide some static utility methods for the same.
 
 ```java
@@ -568,6 +568,7 @@ class TestSort1 {
         stuff.add("Vail");
         stuff.add("Aspen");
         stuff.add("Telluride");
+	
         System.out.println("unsorted " + stuff);
         Collections.sort(stuff); 					// #2
         System.out.println("sorted " + stuff);
@@ -613,12 +614,12 @@ location: class java.util.Collections
 ```
 
 **What's going on here?**
-We know that the Collections class has a sort() method, yet this error implies that Collections does NOT have a sort() method that can take a dvdlist. That means there must be something wrong with the argument we're passing (dvdlist).  
+We know that the Collections class has a sort() method, yet this error implies that Collections does NOT have a sort() method that can take a dvdlist. The description of the one-arg Collections.sort() method, says that it takes a List argument, and that the objects in the List must implement an interface called Comparable. 
 
-When you read the description of the one-arg Collections.sort() method, you'll see that it takes a List argument, and that the objects in the List must implement an interface called Comparable. It turns out that String implements Comparable, and that's why we were able to sort a list of Strings using the Collections.sort() method.
+It turns out that String implements Comparable, and that's why we were able to sort a list of Strings using the Collections.sort() method.
 
 **The Comparable Interface**
-The Comparable interface is used by Collections.sort() method and java.util.Arrays.sort() method to sort Lists and arrays of objects, respectively. 
+It's used by Collections.sort() method and java.util.Arrays.sort() method to sort Lists and arrays of objects, respectively. 
 
 **Implementing the Comparable Interface**
 ```java
@@ -654,8 +655,7 @@ Since we know that the titles are strings and that String implements Comparable,
 ]
 ```
 
-**Remember:**
-When you override equals(), you MUST take an argument of type Object, but that when you override compareTo(), you should take an argument of the type you're sorting.
+**Remember:** When you override equals(), you MUST take an argument of type Object, but when you override compareTo(), you should take an argument of the type you're sorting.
 
 **But we'll probably want to sort DVD collections in lots of different ways. Since we sorted our ArrayList by implementing the compareTo() method, we seem to be stuck. We can only implement compareTo() once in a class.**  
 
@@ -667,7 +667,6 @@ There is an overloaded version of Collections.sort() method that takes both a Li
 - The Comparator interface gives the capability to sort a given collection any number of different ways. 
 - The Comparator interface can be used to sort instances of any class—even classes you can't modify—unlike the Comparable interface, which forces you to change the class whose instances you want to sort. 
 
-
 **Implementing the Comparator interface**  
 Here's a small class that can be used to sort a List of DVDInfo instances by genre:
 ```java
@@ -678,10 +677,9 @@ class GenreSort implements Comparator < DVDInfo > {
     }
 }
 ```
-
-The Comparator.compare() method returns an int whose meaning is the same as the Comparable.compareTo() method's return value.  
-
+The Comparator.compare() method returns an int whose meaning is same as the Comparable.compareTo() method's return value.  
 In this case, we're taking advantage of that by asking compareTo() to do the actual comparison work for us.  
+
 
 **Testing the new Comparator code:**
 ```java
@@ -700,10 +698,8 @@ System.out.println(dvdlist); // output sorted by genre
 ]
  ```
 
-**Sorting with the Arrays Class**
-Sorting arrays of objects is just like sorting collections of objects.  
-
-The java.util.Collections class is used to sort collections; Similarly the java.util.Arrays class can be used to sort arrays.  
+### Sorting with the Arrays Class
+The java.util.Collections class is used to sort collections; Similarly, java.util.Arrays class can be used to sort arrays.  
 
 The Arrays.sort() method is overloaded in the same way the Collections.sort() method is:  
 Arrays.sort(arrayToSort)  
@@ -718,7 +714,7 @@ In addition, the Arrays.sort() method (the one argument version), is overloaded 
 
 **Note:** Whenever you want to sort an array or a collection, the elements inside must all be mutually comparable. For example, if you have an Object[] and you put Cat and Dog objects into it, you won't be able to sort it. In general, objects of different types should be considered NOT mutually comparable unless specifically stated otherwise.  
 
-### Searching Arrays and Collections
+## Searching Arrays and Collections
 The Collections class and the Arrays class both provide methods that allow you to search for a specific element. 
 
 **When searching through collections or arrays, the following rules apply:**
@@ -791,7 +787,6 @@ one = 2
 #7 By switching the use of the arguments in the invocation of compareTo(), we get an inverted sort.
 
 **Converting Arrays to Lists OR Lists to Arrays**  
-
 The List and Set classes have toArray() methods, and the Arrays class has a method called asList().  
 
 The Arrays.asList() method copies an array into a List. The returned list is a fixed-size list backed by the specified array.  
@@ -862,15 +857,19 @@ class ItTest {
         d.add(dog);
         d.add(new Dog("clover"));
         d.add(new Dog("magnolia"));
+	
         Iterator < Dog > i3 = d.iterator(); 		// make an iterator
         while (i3.hasNext()) {
             Dog d2 = i3.next(); 			// cast not required
             System.out.println(d2.name);
         }
+	
         System.out.println("size " + d.size());
         System.out.println("get1 " + d.get(1).name);
         System.out.println("aiko " + d.indexOf(dog));
+	
         d.remove(2);
+	
         Object[] oa = d.toArray();
         for (Object o: oa) {
             Dog d2 = (Dog) o;
@@ -912,9 +911,12 @@ class SetTest {
         ba[2] = s.add("b");
         ba[3] = s.add("a");
         ba[4] = s.add(new Object());
+	
         for (int x = 0; x < ba.length; x++)
             System.out.print(ba[x] + " ");
+	    
         System.out.println();
+	
         for (Object o: s)
             System.out.print(o + " ");
     }
@@ -948,7 +950,6 @@ The issue is that whenever you want a collection to be sorted, its elements must
 
 
 ### Using Maps
-
 Whenever you use an implementation of a Map, any classes that you use as a part of the keys for that map must override the hashCode() and equals() methods.  
 
 (Well, you only have to override them if you're interested in retrieving stuff from your Map. Seriously, it's legal to use a class that doesn't override equals() and hashCode() as a key in a Map; your code will compile and run, you just won't find your stuff.)  
@@ -1143,15 +1144,15 @@ Similarly, higher() returns the element greater than the given element, and ceil
 
 **Other Navigation Methods (New to Java 6 for TreeSet and TreeMap)**
 **Polling**  
-In the case of TreeSet, pollFirst() returns and removes the first entry in the set, and pollLast() returns and removes the last. 
-Similarly, TreeMap now provides pollFirstEntry() and pollLastEntry() to retrieve and remove key/value pairs. 
+In a TreeSet, pollFirst() returns and removes the first entry in the set, and pollLast() returns and removes the last. 
+Similarly, TreeMap provides pollFirstEntry() and pollLastEntry() to retrieve and remove key/value pairs. 
 
 **Descending Order**  
 The important methods are TreeSet.descendingSet() and TreeMap.descendingMap() that return a collection in the reverse order of the collection on which the method was invoked. 
 
 ![Sorry. Image not loaded](./img/table_11-4.png)
 
-**Backed Collections**  
+#### Backed Collections
 Some of the classes in the java.util package support the concept of "backed collections." Let’s go through an example:
 
 ```java
@@ -1285,8 +1286,7 @@ Finally, we review the remaining elements in the queue.
 ![Sorry. Image not loaded](./img/table_11-7.png)
 
 
-### Generic Types
-
+## Generic Types
 Arrays in Java have always been type-safe—an array declared as type String (String []) can't accept Integers (or ints), Dogs, or anything other than Strings.   
 
 **But remember that before Java 5** there was no syntax for declaring a type-safe collection. To make an ArrayList of Strings, you said,  
@@ -1309,7 +1309,6 @@ While you can integrate Java 5 and later generic code with legacy, nongeneric co
 
 
 **The Legacy Way to Do Collections**  
-
 Here's a review of a pre–Java 5 ArrayList intended to hold Strings.   
 
 ```java
@@ -1324,15 +1323,12 @@ This meant it was entirely up to the programmer to be… careful. Having no way 
 **Since a collection could hold anything, therefore the methods that get objects out of the collection had only one kind of return type—java.lang.Object.**  
 
 That meant that getting a String back out of our only-Strings-intended list required a cast:  
-
 ```java
 String s = (String) myList.get(0);
 ```
-
 And since you couldn't guarantee that what was coming out really was a String (since you were allowed to put anything in the list), the cast could fail at runtime. 
 
 **So generics takes care of both ends (the putting in and getting out) by enforcing the type of your collections.**
-
 Let's update the String list:
 ```java
 List<String> myList = new ArrayList<String>();
@@ -1365,7 +1361,6 @@ for (String s : myList) {
 ```
 
 **You can declare a type parameter for a method argument, which then makes the argument a type-safe reference:**
-
 ```java
 void takeListOfStrings(List < String > strings) {
     strings.add("foo"); 			// no problem adding a String
@@ -1415,7 +1410,7 @@ List myList = new ArrayList(); 					// old-style, non-generic
 List < Object > myList = new ArrayList < Object > (); 		// holds ANY object type
 ```
 
-**Declaring a List with a type parameter of <** **Object> makes a collection that works in almost the same way as the original pre–Java 5 nongeneric collection—you can put ANY Object type into the collection. You'll see a little later that nongeneric collections and collections of type <** **Object> aren't entirely the same, but most of the time, the differences do not matter.**  
+**Declaring a List with a type parameter of <**__Object> makes a collection that works in almost the same way as the original pre–Java 5 nongeneric collection—you can put ANY Object type into the collection. You'll see a little later that nongeneric collections and collections of type <__**Object> aren't entirely the same, but most of the time, the differences do not matter.**  
 
 **Generics and Legacy Code**  
 **How to update nongeneric code to make it generic?**  
@@ -1441,7 +1436,7 @@ Integer i = (Integer) list.get(0); 	// cast no longer needed, but it won't hurt
 **Mixing Generic and Nongeneric Collections**  
 
 **CASE I**  
-Imagine we have an ArrayList of type Integer and we're passing it into a method ( we cannot modify) and it accepts nongeneric arguments. Will this work?
+Imagine we have an ArrayList of type Integer and we're passing it into a method (we cannot modify) and it accepts nongeneric arguments. Will this work?
 
 ```java
 // a Java 5 or later class using a generic collection
@@ -1603,7 +1598,7 @@ test2.add(343);
 int x2 = test2.get(0); 				// cast not necessary
 ```
 
-**Polymorphism and Generics**
+### Polymorphism and Generics
 Generic collections give you the same benefits of type safety that you've always had with arrays, but there is a crucial difference.  
 
 Polymorphism applies to the "base" type of the collection:  
@@ -1664,7 +1659,7 @@ List < Object > list = new ArrayList < JButton > (); 	// NO!
 
 **Polymorphism does not work the same way for generics as it does with arrays.** Why are the rules for typing of arrays different from the rules for generic typing?   
 
-**Generic Methods**  
+### Generic Methods
 One of the benefits of polymorphism is that you can declare, say, a method argument of a particular type and at runtime be able to have that argument refer to any subtype.  
 
 Consider a polymorphism example.   
@@ -1787,7 +1782,7 @@ animals.add(new Dog()); // OK
 
 Using an abstract supertype for array declaration allows the array to hold objects of multiple subtypes of the supertype, and then everything in it can respond to method calls defined in the Animal interface. So here, we're using polymorphism not for the object that the array reference points to, but rather what the array can actually HOLD—in this case, any subtype of Animal.  
 
-**The question is still out there—Why can't you pass an ArrayList<** **Dog> into a method with an argument of ArrayList<** **Animal>? Why is it bad for ArrayList but not arrays?**   
+**The question is still out there—Why can't you pass an ArrayList<**__Dog> into a method with an argument of ArrayList<__**Animal>? Why is it bad for ArrayList but not arrays?**   
 
 Actually, the problem IS just as dangerous whether you're using arrays or a generic collection. It's just that the compiler and JVM behaves differently for arrays versus generic collections.  
 
@@ -1999,7 +1994,6 @@ The three that won't compile are
 ### Generic Declarations
 
 **How do we even know that we're allowed/supposed to specify a type for these collection classes? And does generic typing work with any other classes in the API?**  
-
 The API tells you when a parameterized type is expected. For example, this is the API declaration for the java.util.List interface:  
 
 ```java
@@ -2014,7 +2008,7 @@ The E, by the way, is only a convention. Any valid Java identifier would work he
 	**boolean add(E o)**  
 In other words, whatever E is when you declare the List, that's what you can add to it.  
 
-**For eg: List<** **Animal> list = new ArrayList<** **Animal>();**  
+**For eg: List<**__Animal> list = new ArrayList<__**Animal>();**  
  
 At the time of declaration and instantiation of the ArrayList, we pass the placeholder E as Animal. For a List of Animals, the add() method of List must obviously behave like this: 
 	**boolean add(Animal a)**  
@@ -2022,7 +2016,7 @@ At the time of declaration and instantiation of the ArrayList, we pass the place
 **When you look at the API for a generics class or interface, pick a type parameter (Dog, JButton, even Object) and do a mental find and replace on each instance of E (or whatever identifier is used as a placeholder for the type parameter).**  
 
 
-**Making Your Own Generic Class**  
+### Making Your Own Generic Class
 
 **Imagine someone created a class Rental that manages a pool of rentable items:**
 ```java
@@ -2182,7 +2176,7 @@ public class AnimalHolder < T extends Animal > {  			// use "T" instead of "?"
 }
 ```
 
-**Creating Generic Methods**  
+### Creating Generic Methods
 Until now, every eg we've seen uses class parameter type—the type declared with the class name. For eg, the UseTwo declaration, uses the T and X placeholders throughout the code. **But it's possible to define a parameterized type at a more granular level—a method.**  
 
 **Imagine you want to create a method that takes an instance of any type, instantiates an ArrayList of that type, and adds the instance to the ArrayList. The class itself doesn't need to be generic; basically, we just want a utility method that we can pass a type to and that can use that type to construct a type-safe collection.**  
@@ -2220,7 +2214,7 @@ public void makeArrayList(Dog t) {
 public <T> void makeArrayList(T t)
 ```
 
-**The <** **T> before void simply defines what T is before you use it as a type in the argument. You _MUST_ declare the type like that unless type is specified for the class.**
+**The <**__T> before void simply defines what T is before you use it as a type in the argument. You _MUST_ declare the type like that unless type is specified for the class.__
 
 In CreateAnArrayList, the class is not generic, so there's no type parameter placeholder we can use. So we declared a type parameter before the method return type.
 
@@ -2255,7 +2249,7 @@ class X { public <X> X(X x) { } }
 ```
 The X that is the constructor name has no relationship to the type declaration, which has no relationship to the constructor argument identifier, which is also, of course, X. The compiler is able to parse this and treat each of the different uses of X independently.  
 
-**4) One of the most common mistakes programmers make when creating generic classes or methods is to use a <** **?> in the wildcard syntax rather than a type variable <** **T>, <** **E>, and so on. This code might look right, but isn't:**
+**4) One of the most common mistakes programmers make when creating generic classes or methods is to use a <**__?> in the wildcard syntax rather than a type variable <__**T>, <**__E>, and so on. This code might look right, but isn't:__
 ```java
 public class NumberHolder<? extends Number> { }
 
