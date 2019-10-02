@@ -1,7 +1,7 @@
 # Generics & Collections
 
 
-### toString(), hashCode(), and equals() 
+## toString(), hashCode(), and equals() 
 
 Some important methods in class java.lang.Object :
 
@@ -55,21 +55,20 @@ I am a Bob, but you can call me GoBobGo.My shoe size is 19
 
 ```
 
-### Overriding equals()
-Common uses of the equals() method:
+### The equals() Method
+Common uses of overriding the equals() method:
 
 - To sort or search through a collection of objects, the equals() and hashCode() methods are essential. 
 
 - String class has overridden the equals() method (inherited from the class Object), so you could compare two different String objects to see if their contents are equivalent. 
 
-- There is a wrapper class for every kind of primitive. The folks who created the Integer class decided that if two different Integer instances both hold the int value 5, they are equal. The fact that the value 5 lives in two separate objects doesn't matter.
+- There is a wrapper class for every kind of primitive. The folks who created the Integer class decided that if two different Integer instances both hold the int value 5, they are equal. 
 
 - To know if two object references are identical, use ==. But to know if the attributes of the objects themselves (not the references) are equal, use the equals() method. 
 
 For each class you write, you must decide if it makes sense to consider two different instances equal. 
 
-### What It Means If You Don't Override equals()
-
+**What It Means If You Don't Override equals()?**  
 Unless you override equals(), two objects are considered equal only if the two references refer to the same object, since the equals() method in class Object uses only the == operator for comparisons.
 
 - You won't be able to use those objects as a key in a hashtable 
@@ -80,13 +79,12 @@ Imagine you have a car (say, John's red Subaru Outback as opposed to Mary's purp
 
 **If you want objects of your class to be used as keys for a hashtable (or as elements in any data structure that uses equivalency for searching for—and/or retrieving—an object), then you must override equals() so that two different instances can be considered the same.**
 
-So how would we fix the car? You might override the equals() method so that it compares the unique VIN (Vehicle Identification Number) as the basis of comparison. That way, you can use one instance when you add it to a Collection and essentially re-create an identical instance when you want to do a search based on that object as the key. Of course, overriding the equals() method for Car also allows the potential for more than one object representing a single unique car to exist, which might not be safe in your design. 
+Override the equals() method so that it compares the unique VIN (Vehicle Identification Number) as the basis of comparison. That way, you can use one instance when you add it to a Collection and essentially re-create an identical instance when you want to do a search based on that object as the key. Of course, overriding the equals() method for Car also allows the potential for more than one object representing a single unique car to exist, which might not be safe in your design. 
 
 **Fortunately, the String and wrapper classes work well as keys in hashtables— they override the equals() method.**  
 So rather than using the actual car instance as the key into the car/owner pair, you could simply use a String that represents the unique identifier for the car. That way, you'll never have more than one instance representing a specific car, but you can still use the car—or rather, one of the car's attributes—as the search key.
 
-### Implementing an equals() Method
-
+**Implementing an equals() Method**  
 ```java
 public class EqualsTest {
     public static void main(String[] args) {
@@ -118,12 +116,11 @@ class Moof {
 
 **Problem Statement:** Two Moof objects are the same if their moofValue is identical. So you need to override the equals() method and compare the two Moof instances. 
 
-**What happens in the equals() method ?**  
-We have to do two things in order to make a valid equality comparison of two Moof objects. 
+**What happens in the equals() method ?** Two things to make a valid equality comparison of two Moof objects: 
 
-Firstly, the object being tested comes in polymorphically as type Object, so you need to do an instanceof test on it just to be sure that you could cast the object argument to the correct type. If you skip the instanceof test, then you'll get a runtime ClassCastException when the (Moof)o cast will fail if o doesn't refer to something that IS-A Moof. 
+1) The object being tested comes in polymorphically as type Object, so you need to do an instanceof test on it just to be sure that you could cast the object argument to the correct type, otherwise, you'll get a runtime ClassCastException when the (Moof)o cast fails if o doesn't refer to something that IS-A Moof. 
 
-Second, compare the attributes we care about (in this case, just moofValue). 
+2) Compare the attributes we care about (in this case, just moofValue). 
 
 Casting the object reference, o, is necessary so that you can access its methods or variables in to do the comparison. Without the cast, you can't compile because the compiler would see the object referenced by o as an Object and the Object class doesn't have a getMoofValue().
 
@@ -137,8 +134,8 @@ Casting the object reference, o, is necessary so that you can access its methods
 - For any non-null reference value x, x.equals(null) should return false. 
 
 
-### Overriding hashCode()
-The hashcode value of an object is used by some collection classes. Although you can think of it as kind of an object ID number, it isn't necessarily unique. 
+### The hashCode() Method
+You can think of hashcode as a kind of an object ID number, it isn't necessarily unique. 
 
 Collections such as HashMap and HashSet use the hashcode value of an object to determine how the object should be stored in the collection, and the hashcode is used again to help locate the object in the collection. 
 
@@ -148,14 +145,13 @@ Consider the implementation of a HashMap. Basically there is an arrayList where 
 Whenever a key value pair need to be put, Hashcode of the key determines in which bucket should the key-value pair be inserted. 
 Now you need to retrieve the value that matches a given key. The hashcode tells you in which bucket you should look to find the key-value pair. 
 
-*A hashcode is just an integer generated by an algorithm* that will always run the same way given a specific input, so the output will always be identical for any two identical inputs. 
+**A hashcode is just an integer generated by an algorithm** that will always run the same way given a specific input, so the output will always be identical for any two identical inputs. 
 
 For example, key is a string value then the a possible hashcode algorithm could be : You take the string and calculate an integer code from it by using A is 1, B is 2, and so on, adding the numeric values of all the letters in the string together. 
 
 ![Sorry. Image not loaded](./img/hashcode_example.png)
 
-**Note:** Two different names might result in the same value. That's acceptable. The hashcode tells you only which bucket to go into and not how to locate the name once we're in that bucket.
-You'll still have to search through the target bucket, reading each name until we find the desired name.
+**Note:** Two different names might result in the same value. That's acceptable. The hashcode tells you only which bucket to go into. You'll still have to search through the target bucket, reading each name until we find the desired name.
 
 **In real-life hashing, it's common to have more than one entry in a bucket. Hashing retrieval is a two-step process.**   
 **1. Find the right bucket (using hashCode()).**  
@@ -163,7 +159,7 @@ You'll still have to search through the target bucket, reading each name until w
 
 **If two objects are equal, their hashcodes must be equal as well. Two unequal objects may or may not have different hashcodes.**
 
-### Implementing hashCode()
+**Implementing hashCode()**
 ```java
 class HasHash {
     public int x;
@@ -191,18 +187,19 @@ So in order for an object to be located, the search object and the object in the
 So you must override both methods to be absolutely certain that your objects can be used in Collections that use hashing.
 
 **The hashCode() Contract**  
-**- Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified.**  
+- Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified.   
 
-**- If two objects are equal according to the equals(Object) method, then calling the hashCode() method on each of the two objects must produce the same integer result.**  
+- If two objects are equal according to the equals(Object) method, then calling the hashCode() method on each of the two objects must produce the same integer result.  
 
-**- It is NOT required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode() method on each of the two objects must produce distinct integer results.**
+- It is NOT required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode() method on each of the two objects must produce distinct integer results.
 
 
 ![Sorry. Image not loaded](./img/hashcode_equals_table.png)
 
 **What happens if you include a transient variable in your hashCode() method?**  
-While that's legal (the compiler won't complain), under some circumstances, an object you put in a collection won't be found. As you might know, serialization saves an object so that it can be reanimated later by deserializing it back to full objectness. But transient variables are not saved when an object is serialized.
+As you might know, serialization saves an object so that it can be reanimated later by deserializing it back to full objectness. But transient variables are not saved when an object is serialized.
 
+While that's legal (the compiler won't complain), under some circumstances, an object put in a collection won't be found.
 ```java
 class SaveMe implements Serializable {
     transient int x;
@@ -225,7 +222,7 @@ class SaveMe implements Serializable {
     }
 }
 ```
-
+ 
 Here's what could happen using code like the preceding example: 
 1. Give an object some state (assign values to its instance variables). Eg: x = 9, y = 7
 2. Put the object in a HashMap, using the object as a key. 
@@ -237,7 +234,7 @@ Here's what could happen using code like the preceding example:
 **Bottom line: transient variables can really mess with your equals() and hashCode() implementations. Keep variables non-transient or, if they must be marked transient, don't use them to determine hashcodes or equality.**
 
 
-### Collections
+## Collections
 The Collections Framework in Java, gives you lists, sets, maps, and queues to satisfy most of your coding needs. 
 
 **Basic operations you'll normally use with collections:**  
@@ -250,10 +247,10 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 
 **Key Interfaces and Classes of the Collections Framework**
 
-**The core interfaces:**
+**The core interfaces:**  
 ![Sorry. Image not loaded](./img/interfaces.png)
 
-**The concrete implementation classes:**
+**The concrete implementation classes:**  
 ![Sorry. Image not loaded](./img/concrete_classes.png)
 
 
@@ -285,9 +282,9 @@ An implementation class can be unsorted and unordered, ordered but unsorted, or 
 
 **Ordered**   
 An ordered collection means you can iterate through the collection in a specific (not random) order.   
-A Hashtable collection is not ordered. Although the Hashtable itself has internal logic to determine the order (based on hashcodes and the implementation of the collection itself), you won't find any order when you iterate through the Hashtable. 
-An ArrayList, keeps the order established by the elements' index position (just like an array).  
-LinkedHashSet keeps the order established by insertion (as opposed to an ArrayList, where you can insert an element at a specific index position). 
+- A Hashtable collection is not ordered. Although the Hashtable itself has internal logic to determine the order (based on hashcodes and the implementation of the collection itself), you won't find any order when you iterate through the Hashtable. 
+- An ArrayList, keeps the order established by the elements' index position (just like an array).  
+- LinkedHashSet keeps the order established by insertion. 
 
 **Sorted**  
 A sorted collection means that the collection keeps the elements in order determined according to some rule or rules, known as the sort order.  
@@ -298,6 +295,7 @@ Most commonly, the sort order used is the natural order.
 - There is no natural order for custom objects unless the Foo developer provides one through an interface (Comparable or Comparator) that defines how instances of a class can be compared to one another.  
 **NOTE:** sort order (including natural order) is not the same as ordering by insertion, access, or index.
 
+---
 
 **List Interface**  
 A List cares about the index. The one thing that List has that non-lists don't is a set of methods related to the index like get(int index), indexOf(Object o), add(int index, Object obj), and so on. 
@@ -305,30 +303,32 @@ A List cares about the index. The one thing that List has that non-lists don't i
 All three List implementations are ordered by index position—a position that you determine either by setting an object at a specific index or by adding it without specifying position, in which case the object is added to the end. 
 
 
-**ArrayList**  
+**_ArrayList_**  
 It’s a growable array & gives you fast iteration and fast random access. 
 It is an ordered collection (by index), but not sorted. 
 Choose this over a LinkedList when you need fast iteration but aren't as likely to be doing a lot of insertion and deletion. 
 
-**Vector**   
-A Vector is basically the same as an ArrayList, but Vector methods are synchronized for thread safety. You'll normally want to use ArrayList instead of Vector because the synchronized methods add a performance hit you might not need. And if you do need thread safety, there are utility methods in class Collections that can help. Vector is the only class other than ArrayList to implement RandomAccess.
+**_Vector_**   
+A Vector is basically the same as an ArrayList, but Vector methods are synchronized for thread safety. The synchronized methods add a performance hit you might not need. Vector is the only class other than ArrayList to implement RandomAccess.
 
-**LinkedList**  
+**_LinkedList_**  
 A LinkedList is ordered by index position, like ArrayList, except that the elements are doubly linked to one another. This linkage gives you new methods (beyond what you get from the List interface) for adding and removing from the beginning or end, which makes it an easy choice for implementing a stack or queue. Keep in mind that a LinkedList may iterate more slowly than an ArrayList, but it's a good choice when you need fast insertion and deletion. As of Java 5, the LinkedList class has been enhanced to implement the java.util. Queue interface & it now supports the common queue methods peek(), poll(), and offer().
+
+---
 
 **Set Interface**  
 A Set cares about uniqueness—it doesn't allow duplicates. The equals() method determines whether two objects are identical (in which case, only one can be in the set). 
 
 The three Set implementations are:  
-**HashSet**  
+**_HashSet_**  
 A HashSet is an unsorted, unordered Set. It uses the hashcode of the object being inserted, so the more efficient your hashCode() implementation, the better access performance you'll get. 
 
-**LinkedHashSet**  
-A LinkedHashSet is an ordered version of HashSet that maintains the insertion order using  a doubly linked List across all elements. 
+**_LinkedHashSet_**  
+A LinkedHashSet is an ordered version of HashSet that maintains the insertion order using a doubly linked List across all elements. 
 
 **When using HashSet or LinkedHashSet, the objects you add to them must override hashCode(). If they don't override hashCode(), the default Object.hashCode() method will allow multiple objects that you might consider "meaningfully equal" to be added to your "no duplicates allowed" set.**  
 
-**TreeSet**  
+**_TreeSet_**  
 The TreeSet is a sorted collection. It uses a Red-Black tree structure, and guarantees that the elements will be in ascending order, according to the natural order. Optionally TreeSet lets you define a custom sort order via a Comparator when you construct a TreeSet. As of Java 6, TreeSet implements NavigableSet.
 
 **Map Interface**  
@@ -336,35 +336,35 @@ Lets you map a unique key (the ID) to a specific value, where both the key and t
 
 Like Sets, Maps rely on the equals() method to determine whether two keys are the same or different.
 	
-**HashMap**  
+**_HashMap_**  
 The HashMap gives you an unsorted, unordered Map. Where the keys land in the Map is based on the key's hashcode, so, like HashSet, the more efficient your hashCode() implementation, the better access performance you'll get. HashMap allows one null key and multiple null values in a collection. 
 
-**Hashtable**  
-Just as Vector is a synchronized counterpart to the ArrayList, Hashtable is the synchronized counterpart to HashMap. Remember that you don't synchronize a class, so when we say that Vector and Hashtable are synchronized, we just mean that the key methods of the class are synchronized. 
+**_Hashtable_**  
+Just as Vector is a synchronized counterpart to the ArrayList, Hashtable is the synchronized counterpart to HashMap. Remember that you don't synchronize a class, we just mean that the key methods of the class are synchronized. 
 Another difference, though, is that while HashMap lets you have null values as well as one null key, a Hashtable doesn't let you have anything that's null. 
 
-**LinkedHashMap**   
+**_LinkedHashMap_**   
 Like its Set counterpart, LinkedHashSet, the LinkedHashMap collection maintains insertion order. Although it will be somewhat slower than HashMap for adding and removing elements, you can expect faster iteration with a LinkedHashMap. 
 
-**TreeMap**   
+**_TreeMap_**   
 A TreeMap is a sorted Map i.e sorted by the natural order of the elements by default. Like TreeSet, TreeMap lets you define a custom sort order via a Comparator when you construct a TreeMap. As of Java 6, TreeMap implements NavigableMap.
 
 **Queue Interface**   
 A Queue is designed to hold a list of things to be processed in some way. Queues support all of the standard Collection methods and they also have methods to add and subtract elements and review queue elements. 
 
-**PriorityQueue**   
+**_PriorityQueue_**   
 Since the LinkedList class has been enhanced to implement the Queue interface, basic queues can be handled with a LinkedList. The purpose of a PriorityQueue is to create a "priority-in, priority out" queue as opposed to a typical FIFO queue. A PriorityQueue's elements are ordered either by natural ordering (in which case the elements that are sorted first will be accessed first) or according to a Comparator. In either case, the elements' ordering represents their relative priority.
 
 ![Sorry. Image not loaded](./img/table_11-2.png)
 
 
-### Using Collections 
+## Using Collections 
 
-## ArrayList Basics
+### ArrayList Basics
 
 Let's take a look at using an ArrayList that contains strings. In practice, you'll typically want to instantiate an ArrayList polymorphically, like this: **List myList = new ArrayList();**
 
-As of Java 5, you'll want to say: **List<**String> myList = new ArrayList<**String>();**
+As of Java 5, you'll want to say: **List<**__String> myList = new ArrayList<__**String>();**
 
 This kind of declaration follows the object-oriented programming principle of "coding to an interface," and it makes use of generics. (Prior to Java 5, there was no way to specify the type of a collection, and when we cover generics)
 
@@ -394,7 +394,11 @@ Notice that when we declared the ArrayList we didn't give it a size.
 We were able to ask the ArrayList for its size and whether it contained specific objects, we removed an object right out from the middle of it, and then we rechecked its size.
 
 ## Autoboxing with Collections
-In general, collections can hold Objects but not primitives. Prior to Java 5, a common use for the so-called "wrapper classes" (e.g., Integer, Float, Boolean, and so on) was to provide a way to get primitives into and out of collections. Prior to Java 5, you had to "wrap" a primitive manually before you could put it into a collection. With Java 5, primitives still have to be wrapped, but autoboxing takes care of it for you.
+Collections can hold Objects but not primitives.  
+
+Prior to Java 5, a common use for the so-called "wrapper classes" (e.g., Integer, Float, Boolean, and so on) was to provide a way to get primitives into and out of collections. Prior to Java 5, you had to "wrap" a primitive manually before you could put it into a collection.  
+
+With Java 5, primitives still have to be wrapped, but autoboxing takes care of it for you.
 
 ```java
 
@@ -490,7 +494,7 @@ In order to save memory, two instances of the following wrapper objects (created
 
 **When == is used to compare a primitive to a wrapper, the wrapper will be unwrapped and the comparison will be primitive to primitive.**
 
-**Where Boxing Can Be Used**   
+**Where Boxing Can Be Used?**   
 It's common to use wrappers in conjunction with collections. Any time you want your collection to hold objects and primitives, you'll want to use wrappers to make those primitives collection-compatible.  
 
 The general rule is that boxing and unboxing work wherever you can normally use a primitive or a wrapped object. The following code demonstrates some legal ways to use boxing
@@ -734,34 +738,30 @@ The Collections class and the Arrays class both provide methods that allow you t
 - If the collection/array you want to search was sorted using a Comparator, it must be searched using the same Comparator, which is passed as the second argument to the binarySearch() method. Remember that Comparators cannot be used when searching arrays of primitives.  
 
 Let's take a look at a code sample that exercises the binarySearch() method:
+
 ```java
 import java.util.*;
 class SearchObjArray {
     public static void main(String[] args) {
-        String[] sa = {
-            "one",
-            "two",
-            "three",
-            "four"
-        };
-        Arrays.sort(sa); 					// #1
+        String[] sa = {"one", "two", "three", "four"};
+        Arrays.sort(sa); 							// #1
         for (String s: sa)
             System.out.print(s + " ");
         
-	System.out.println("\none = " + Arrays.binarySearch(sa, "one")); 			// #2
+	System.out.println("\none = " + Arrays.binarySearch(sa, "one"));	// #2
         System.out.println("now reverse sort");
         
-	ReSortComparator rs = new ReSortComparator(); 		// #3
+	ReSortComparator rs = new ReSortComparator(); 				// #3
         Arrays.sort(sa, rs);
         for (String s: sa)
             System.out.print(s + " ");
-        System.out.println("\none = " + Arrays.binarySearch(sa, "one")); 			// #4
-        System.out.println("one = " + Arrays.binarySearch(sa, "one", rs)); 			// #5
+        System.out.println("\none = " + Arrays.binarySearch(sa, "one")); 	// #4
+        System.out.println("one = " + Arrays.binarySearch(sa, "one", rs)); 	// #5
     }
     
-    static class ReSortComparator implements Comparator < String > { 				// #6
+    static class ReSortComparator implements Comparator < String > { 		// #6
         public int compare(String a, String b) {
-            return b.compareTo(a); 								// #7
+            return b.compareTo(a); 						// #7
         }
     }
 }
@@ -831,7 +831,7 @@ Integer[] ia2 = new Integer[3];
 ia2 = iL.toArray(ia2); 					// create an Integer array
 ```
 
-**Using Lists**
+### Using Lists
 Lists are usually used to keep things in some kind of order. For eg:  
 - LinkedList → To create a first-in, first-out queue. 
 - ArrayList → To keep track of what locations were visited and in what order. 
@@ -896,7 +896,7 @@ Because of this, when we used the next() method, we didn't have to cast the Obje
 We could have declared the Iterator like this:			Iterator i3 = d.iterator();  
 But then we would have had to cast the returned value: 		Dog d2 = (Dog) i3.next();
 
-**Using Sets**
+### Using Sets
 Sets are used when you don't want any duplicates in your collection. If you attempt to add a duplicate, then the element will not be added, and the add() method will return false. 
 
 **A TreeSet, which is a Set stores elements in sorted order. But you must use caution when using a TreeSet. Why?**
@@ -947,7 +947,7 @@ String
 The issue is that whenever you want a collection to be sorted, its elements must be mutually comparable. Remember that unless otherwise specified, objects of different types are not mutually comparable.
 
 
-**Using Maps**  
+### Using Maps
 
 Whenever you use an implementation of a Map, any classes that you use as a part of the keys for that map must override the hashCode() and equals() methods.  
 
