@@ -8,7 +8,7 @@ Some important methods in class java.lang.Object :
 ![noImage](./img/table_11-1.png)
 
 
-### The toString() Method
+### :point_right: The toString() Method
 
 Code calls toString() on your object when it wants to read useful details about your object. For eg, it is invoked when you pass an object reference to the System.out.println() method.
 
