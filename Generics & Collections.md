@@ -55,7 +55,7 @@ I am a Bob, but you can call me GoBobGo.My shoe size is 19
 
 ```
 
-### The equals() Method
+### :point_right: The equals() Method
 Common uses of overriding the equals() method:
 
 - To sort or search through a collection of objects, the equals() and hashCode() methods are essential. 
@@ -134,7 +134,7 @@ Casting the object reference, o, is necessary so that you can access its methods
 - For any non-null reference value x, x.equals(null) should return false. 
 
 
-### The hashCode() Method
+### :point_right: The hashCode() Method
 You can think of hashcode as a kind of an object ID number, it isn't necessarily unique. 
 
 Collections such as HashMap and HashSet use the hashcode value of an object to determine how the object should be stored in the collection, and the hashcode is used again to help locate the object in the collection. 
@@ -234,6 +234,7 @@ Here's what could happen using code like the preceding example:
 **Bottom line: transient variables can really mess with your equals() and hashCode() implementations. Keep variables non-transient or, if they must be marked transient, don't use them to determine hashcodes or equality.**
 
 
+
 ## Collections
 The Collections Framework in Java, gives you lists, sets, maps, and queues to satisfy most of your coding needs. 
 
@@ -278,6 +279,7 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 ![Sorry. Image not loaded](./img/figure_11-3.png)
 
 
+### :point_right: Ordered & Sorted Collections
 An implementation class can be unsorted and unordered, ordered but unsorted, or both ordered and sorted. But an implementation can never be sorted but unordered, because sorting is a specific type of ordering. For example, a HashSet is an unordered, unsorted set, while a LinkedHashSet is an ordered (but not sorted) set that maintains the order in which objects were inserted.
 
 **Ordered**   
@@ -297,7 +299,7 @@ Most commonly, the sort order used is the natural order.
 
 ---
 
-**List Interface**  
+### :point_right: List Interface
 A List cares about the index. The one thing that List has that non-lists don't is a set of methods related to the index like get(int index), indexOf(Object o), add(int index, Object obj), and so on. 
 
 All three List implementations are ordered by index position—a position that you determine either by setting an object at a specific index or by adding it without specifying position, in which case the object is added to the end. 
@@ -316,7 +318,7 @@ A LinkedList is ordered by index position, like ArrayList, except that the eleme
 
 ---
 
-**Set Interface**  
+### :point_right: Set Interface
 A Set cares about uniqueness—it doesn't allow duplicates. The equals() method determines whether two objects are identical (in which case, only one can be in the set). 
 
 The three Set implementations are:  
@@ -331,7 +333,9 @@ A LinkedHashSet is an ordered version of HashSet that maintains the insertion or
 **_TreeSet_**  
 The TreeSet is a sorted collection. It uses a Red-Black tree structure, and guarantees that the elements will be in ascending order, according to the natural order. Optionally TreeSet lets you define a custom sort order via a Comparator when you construct a TreeSet. As of Java 6, TreeSet implements NavigableSet.
 
-**Map Interface**  
+---
+
+### :point_right: Map Interface 
 Lets you map a unique key (the ID) to a specific value, where both the key and the value are objects. The Map implementations let you do things like search for a value based on the key, ask for a collection of just the values, or ask for a collection of just the keys. 
 
 Like Sets, Maps rely on the equals() method to determine whether two keys are the same or different.
@@ -349,7 +353,9 @@ Like its Set counterpart, LinkedHashSet, the LinkedHashMap collection maintains 
 **_TreeMap_**   
 A TreeMap is a sorted Map i.e sorted by the natural order of the elements by default. Like TreeSet, TreeMap lets you define a custom sort order via a Comparator when you construct a TreeMap. As of Java 6, TreeMap implements NavigableMap.
 
-**Queue Interface**   
+---
+
+### :point_right: Queue Interface 
 A Queue is designed to hold a list of things to be processed in some way. Queues support all of the standard Collection methods and they also have methods to add and subtract elements and review queue elements. 
 
 **_PriorityQueue_**   
@@ -358,9 +364,8 @@ Since the LinkedList class has been enhanced to implement the Queue interface, b
 ![Sorry. Image not loaded](./img/table_11-2.png)
 
 
-## Using Collections 
 
-### ArrayList Basics
+## ArrayList Basics
 
 Let's take a look at using an ArrayList that contains strings. In practice, you'll typically want to instantiate an ArrayList polymorphically, like this: **List myList = new ArrayList();**
 
@@ -554,7 +559,7 @@ Map<String, Dog> dogMap = new HashMap<>();
 ## Sorting Collections and Arrays
 Both collections and arrays can be sorted and searched using methods in the API.
 
-### Sorting Collections
+### :point_right: Sorting with the Collections class
 Let's start with sorting an ArrayList of strings alphabetically. 
 The java.util.Collections class does provide some static utility methods for the same.
 
@@ -698,7 +703,7 @@ System.out.println(dvdlist); // output sorted by genre
 ]
  ```
 
-### Sorting with the Arrays Class
+### :point_right: Sorting with the Arrays Class
 The java.util.Collections class is used to sort collections; Similarly, java.util.Arrays class can be used to sort arrays.  
 
 The Arrays.sort() method is overloaded in the same way the Collections.sort() method is:  
@@ -713,6 +718,8 @@ In addition, the Arrays.sort() method (the one argument version), is overloaded 
 ![Sorry. Image not loaded](./img/table_11-3.png)
 
 **Note:** Whenever you want to sort an array or a collection, the elements inside must all be mutually comparable. For example, if you have an Object[] and you put Cat and Dog objects into it, you won't be able to sort it. In general, objects of different types should be considered NOT mutually comparable unless specifically stated otherwise.  
+
+
 
 ## Searching Arrays and Collections
 The Collections class and the Arrays class both provide methods that allow you to search for a specific element. 
@@ -787,9 +794,7 @@ one = 2
 #7 By switching the use of the arguments in the invocation of compareTo(), we get an inverted sort.
 
 **Converting Arrays to Lists OR Lists to Arrays**  
-The List and Set classes have toArray() methods, and the Arrays class has a method called asList().  
-
-The Arrays.asList() method copies an array into a List. The returned list is a fixed-size list backed by the specified array.  
+The List and Set classes have toArray() methods, and the Arrays class has a method called asList(). The Arrays.asList() method copies an array into a List. The returned list is a fixed-size list backed by the specified array.  
 
 **What does this mean?**  
 - Add and remove methods throw UnsupportedOperationException.
@@ -814,8 +819,7 @@ one five three six
 sl[1] five
 ```
 
-Let's take a look at the toArray() method.   
-It comes in two flavors: one that returns a new Object array, and one that uses the array you send it as the destination array:  
+The toArray() method comes in two flavors: one that returns a new Object array, and one that uses the array you send it as the destination array:  
 
 ```java
 List<Integer> iL = new ArrayList<Integer>();
@@ -826,7 +830,9 @@ Integer[] ia2 = new Integer[3];
 ia2 = iL.toArray(ia2); 					// create an Integer array
 ```
 
-### Using Lists
+## Using Collections
+
+### :point_right: Using Lists
 Lists are usually used to keep things in some kind of order. For eg:  
 - LinkedList → To create a first-in, first-out queue. 
 - ArrayList → To keep track of what locations were visited and in what order. 
@@ -895,7 +901,7 @@ Because of this, when we used the next() method, we didn't have to cast the Obje
 We could have declared the Iterator like this:			Iterator i3 = d.iterator();  
 But then we would have had to cast the returned value: 		Dog d2 = (Dog) i3.next();
 
-### Using Sets
+### :point_right: Using Sets
 Sets are used when you don't want any duplicates in your collection. If you attempt to add a duplicate, then the element will not be added, and the add() method will return false. 
 
 **A TreeSet, which is a Set stores elements in sorted order. But you must use caution when using a TreeSet. Why?**
@@ -949,7 +955,7 @@ String
 The issue is that whenever you want a collection to be sorted, its elements must be mutually comparable. Remember that unless otherwise specified, objects of different types are not mutually comparable.
 
 
-### Using Maps
+### :point_right: Using Maps
 Whenever you use an implementation of a Map, any classes that you use as a part of the keys for that map must override the hashCode() and equals() methods.  
 
 (Well, you only have to override them if you're interested in retrieving stuff from your Map. Seriously, it's legal to use a class that doesn't override equals() and hashCode() as a key in a Map; your code will compile and run, you just won't find your stuff.)  
@@ -1286,6 +1292,7 @@ Finally, we review the remaining elements in the queue.
 ![Sorry. Image not loaded](./img/table_11-7.png)
 
 
+
 ## Generic Types
 Arrays in Java have always been type-safe—an array declared as type String (String []) can't accept Integers (or ints), Dogs, or anything other than Strings.   
 
@@ -1598,7 +1605,7 @@ test2.add(343);
 int x2 = test2.get(0); 				// cast not necessary
 ```
 
-### Polymorphism and Generics
+### :point_right: Polymorphism and Generics
 Generic collections give you the same benefits of type safety that you've always had with arrays, but there is a crucial difference.  
 
 Polymorphism applies to the "base" type of the collection:  
@@ -1659,7 +1666,8 @@ List < Object > list = new ArrayList < JButton > (); 	// NO!
 
 **Polymorphism does not work the same way for generics as it does with arrays.** Why are the rules for typing of arrays different from the rules for generic typing?   
 
-### Generic Methods
+
+### :point_right: Generic Methods
 One of the benefits of polymorphism is that you can declare, say, a method argument of a particular type and at runtime be able to have that argument refer to any subtype.  
 
 Consider a polymorphism example.   
@@ -1991,7 +1999,7 @@ The three that won't compile are
 - **Problem** You cannot assign a Dog to <? super Animal>. The Dog is too "low" in the class hierarchy. Only <Animal> or <Object> would have been legal.
 	
 
-### Generic Declarations
+### :point_right: Generic Declarations
 
 **How do we even know that we're allowed/supposed to specify a type for these collection classes? And does generic typing work with any other classes in the API?**  
 The API tells you when a parameterized type is expected. For example, this is the API declaration for the java.util.List interface:  
@@ -2016,7 +2024,7 @@ At the time of declaration and instantiation of the ArrayList, we pass the place
 **When you look at the API for a generics class or interface, pick a type parameter (Dog, JButton, even Object) and do a mental find and replace on each instance of E (or whatever identifier is used as a placeholder for the type parameter).**  
 
 
-### Making Your Own Generic Class
+### :point_right:Making Your Own Generic Class
 
 **Imagine someone created a class Rental that manages a pool of rentable items:**
 ```java
@@ -2176,7 +2184,7 @@ public class AnimalHolder < T extends Animal > {  			// use "T" instead of "?"
 }
 ```
 
-### Creating Generic Methods
+### :point_right: Creating Generic Methods
 Until now, every eg we've seen uses class parameter type—the type declared with the class name. For eg, the UseTwo declaration, uses the T and X placeholders throughout the code. **But it's possible to define a parameterized type at a more granular level—a method.**  
 
 **Imagine you want to create a method that takes an instance of any type, instantiates an ArrayList of that type, and adds the instance to the ArrayList. The class itself doesn't need to be generic; basically, we just want a utility method that we can pass a type to and that can use that type to construct a type-safe collection.**  
