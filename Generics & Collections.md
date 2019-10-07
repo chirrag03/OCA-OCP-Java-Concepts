@@ -23,7 +23,7 @@ public class HardToRead {
 
 //Running the HardToRead class gives us the lovely and meaningful
 %java HardToRead
-HardToRead @a47e0
+HardToRead@a47e0
 
 ```
 Because you don’t override the toString() method of class Object, the output is class name followed by the @ symbol, followed by the unsigned hexadecimal representation of the object’s hashcode.
@@ -156,6 +156,10 @@ For example, key is a string value then the a possible hashcode algorithm could 
 **In real-life hashing, it's common to have more than one entry in a bucket. Hashing retrieval is a two-step process.**   
 **1. Find the right bucket (using hashCode()).**  
 **2. Search the bucket for the right element (using equals())**  
+
+**Similarly inserting a key value pair in a Hashmap is a two-step process.**   
+**1. Find the right bucket (using hashCode()).**  
+**2. Travserse the elements in bucket to check if the element exists(using equals()). If it exists then update otherwise insert.**  
 
 **If two objects are equal, their hashcodes must be equal as well. Two unequal objects may or may not have different hashcodes.**
 
@@ -297,22 +301,23 @@ Most of the refinements are simply dealing with the fact that Lists are guarante
 
 
 ### :point_right: Ordered & Sorted Collections
-An implementation class can be unsorted and unordered, ordered but unsorted, or both ordered and sorted. But an implementation can never be sorted but unordered, because sorting is a specific type of ordering. For example, a HashSet is an unordered, unsorted set, while a LinkedHashSet is an ordered (but not sorted) set that maintains the order in which objects were inserted.
 
-**Ordered**   
+**Ordered Collection**   
 An ordered collection means you can iterate through the collection in a specific (not random) order.   
 - A Hashtable collection is not ordered. Although the Hashtable itself has internal logic to determine the order (based on hashcodes and the implementation of the collection itself), you won't find any order when you iterate through the Hashtable. 
 - An ArrayList, keeps the order established by the elements' index position (just like an array).  
 - LinkedHashSet keeps the order established by insertion. 
 
-**Sorted**  
+**Sorted Collection**  
 A sorted collection means that the collection keeps the elements in order determined according to some rule or rules, known as the sort order.  
 
 Most commonly, the sort order used is the natural order.  
 - For a collection of String objects, the natural order is alphabetical order. 
 - For Integer objects, the natural order is by numeric value—1 before 2, and so on. 
 - There is no natural order for custom objects unless the Foo developer provides one through an interface (Comparable or Comparator) that defines how instances of a class can be compared to one another.  
-**NOTE:** sort order (including natural order) is not the same as ordering by insertion, access, or index.
+**NOTE:** sort order (including natural order) is not the same as ordering by insertion, access, or index.  
+
+An implementation class can be unsorted and unordered, ordered but unsorted, or both ordered and sorted. But an implementation can never be sorted but unordered, because sorting is a specific type of ordering. For example, a HashSet is an unordered, unsorted set, while a LinkedHashSet is an ordered (but not sorted) set that maintains the order in which objects were inserted.
 
 ---
 
@@ -323,15 +328,14 @@ All three List implementations are ordered by index position—a position that y
 
 
 **_ArrayList_**  
-It’s a growable array & gives you fast iteration and fast random access. 
-It is an ordered collection (by index), but not sorted. 
-Choose this over a LinkedList when you need fast iteration but aren't as likely to be doing a lot of insertion and deletion. 
-
+It’s a growable array & gives you fast iteration and random access. It is an ordered collection (by index), but not sorted. 
 **_Vector_**   
 A Vector is basically the same as an ArrayList, but Vector methods are synchronized for thread safety. The synchronized methods add a performance hit you might not need. Vector is the only class other than ArrayList to implement RandomAccess.
 
 **_LinkedList_**  
-A LinkedList is ordered by index position, like ArrayList, except that the elements are doubly linked to one another. This linkage gives you new methods (beyond what you get from the List interface) for adding and removing from the beginning or end, which makes it an easy choice for implementing a stack or queue. Keep in mind that a LinkedList may iterate more slowly than an ArrayList, but it's a good choice when you need fast insertion and deletion. As of Java 5, the LinkedList class has been enhanced to implement the java.util. Queue interface & it now supports the common queue methods peek(), poll(), and offer().
+A LinkedList is ordered by index position, like ArrayList, except that the elements are doubly linked to one another. This linkage gives you new methods (beyond what you get from the List interface) for adding and removing from the beginning or end, which makes it an easy choice for implementing a stack or queue. As of Java 5, the LinkedList class has been enhanced to implement the java.util. Queue interface & it now supports the common queue methods peek(), poll(), and offer().  
+
+:bulb: Choose Arraylist over a LinkedList when you need fast iteration but LinkedList is a good choice when you need fast insertion and deletion.
 
 ---
 
