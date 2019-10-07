@@ -1660,7 +1660,7 @@ In this code,
 ```java
 List<JButton> myList = new ArrayList<JButton>();
 ``` 
-List and ArrayList are the base type and JButton is the generic type. So an ArrayList can be assigned to a List, but a collection of <JButton> cannot be assigned to a reference of <Object>, even though JButton is a subtype of Object.  
+List and ArrayList are the base type and JButton is the generic type. So an ArrayList can be assigned to a List, but a collection of \<JButton> cannot be assigned to a reference of \<Object>, even though JButton is a subtype of Object.  
 	
 This is NOT how it works with arrays, where you are allowed to do this:
 
@@ -1783,11 +1783,11 @@ in AnimalDoctorGeneric cannot be applied to (java.util.List<Bird>)
  ^
 3 errors
 ```
-The compiler stops us with errors, not warnings. You simply CANNOT assign the individual ArrayLists of Animal subtypes (<Dog>, <Cat>, or <Bird>) to an ArrayList of the supertype , which is the declared type of the argument.  
+The compiler stops us with errors, not warnings. You simply CANNOT assign the individual ArrayLists of Animal subtypes (\<Dog>, \<Cat>, or \<Bird>) to an ArrayList of the supertype , which is the declared type of the argument.  
 The ONLY thing you can pass to a method argument of ArrayList<Animal> is an ArrayList<Animal>! 
 	
 **Distinction between typed arrays and typed collections.**  
-According to the polymorphism assignment rules, a method that takes an ArrayList<Animal> will NOT be able to accept a collection of any Animal subtype! That means ArrayList<Dog> cannot be passed into a method with an argument of ArrayList<Animal>, even though we know that this works fine with plain old arrays.  
+According to the polymorphism assignment rules, a method that takes an ArrayList\<Animal> will NOT be able to accept a collection of any Animal subtype! That means ArrayList\<Dog> cannot be passed into a method with an argument of ArrayList\<Animal>, even though we know that this works fine with plain old arrays.  
 
 So we have two real issues:  
 1. Why doesn't this work? 			2. How do you get around it?
@@ -1850,7 +1850,7 @@ public static void main(String[] args) {
 }
  ```
  
- As long as the only thing you pass to the addAnimals(List<Animal>) is an ArrayList<Animal>, the compiler is pleased—knowing that any Animal subtype you add will be valid (you can always add a Dog to an Animal collection, yada, yada, yada).   
+ As long as the only thing you pass to the addAnimals(List\<Animal>) is an ArrayList\<Animal>, the compiler is pleased—knowing that any Animal subtype you add will be valid (you can always add a Dog to an Animal collection, yada, yada, yada).   
 But if you try to invoke addAnimal() with an argument of any OTHER ArrayList type, the compiler will stop you, since at runtime the JVM would have no way to stop you from adding a Dog to what was created as a Cat collection.  
 	
 	
@@ -1871,7 +1871,7 @@ public void addAnimal(List<? extends Animal> animals)
 ```
 
 By saying <? extends Animal>, we're saying,   
-- "I can be assigned a collection that is a subtype of List and typed for <Animal> or anything that extends Animal.”   
+- "I can be assigned a collection that is a subtype of List and typed for \<Animal> or anything that extends Animal.”   
 - “Also that I'm using the collection passed in just to invoke methods on the elements—and I promise not to ADD anything into the collection"   
 	
 The addAnimal() method shown previously won't actually compile, even with the wildcard notation, because that method DOES add something.  
@@ -1944,11 +1944,11 @@ public void foo(List<Object> list) { }
 
 List\<Object> is completely different from List<?>  
 
-Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of \<Dog>, <Integer>, <JBButton>, <Socket> whatever.   
+Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of \<Dog>, \<Integer>, \<JBButton>, \<Socket> whatever.   
 
 Also, as we are using the wildcard without the keyword super, means that you cannot ADD anything to the list referred to as List<?>.  
 
-List<Object> means that the method can take ONLY a List<Object>. Not a List<Dog> or a List<Cat>. It does, however, mean that you can add to the list, since the compiler has already made certain that you're passing only a valid List<Object> into the method.  
+List\<Object> means that the method can take ONLY a List\<Object>. Not a List\<Dog> or a List\<Cat>. It does, however, mean that you can add to the list, since the compiler has already made certain that you're passing only a valid List\<Object> into the method.  
 	
 **Figure out if the following will work?**
 ```java
@@ -1986,7 +1986,7 @@ class Bar {
 }
 ```
 
-This time, class Bar, with the doInsert() method, compiles just fine. The problem is that the TestWildcards code is trying to pass a List<Integer> into a method that can take ONLY a List<Object>. And nothing else can be substituted for <Object>.  
+This time, class Bar, with the doInsert() method, compiles just fine. The problem is that the TestWildcards code is trying to pass a List\<Integer> into a method that can take ONLY a List\<Object>. And nothing else can be substituted for \<Object>.  
 	
 **By the way, List<? extends Object> and List<?> are absolutely identical!**   
 
@@ -1994,12 +1994,12 @@ This time, class Bar, with the doInsert() method, compiles just fine. The proble
 
 **Look at the following statements and figure out which will compile:**  
 
-1) List<?> list = new ArrayList<Dog>();
-2) List<? extends Animal> aList = new ArrayList<Dog>();
+1) List<?> list = new ArrayList\<Dog>();
+2) List<? extends Animal> aList = new ArrayList\<Dog>();
 3) List<?> foo = new ArrayList<? extends Animal>();
-4) List<? extends Dog> cList = new ArrayList<Integer>();
-5) List<? super Dog> bList = new ArrayList<Animal>();
-6) List<? super Animal> dList = new ArrayList<Dog>();
+4) List<? extends Dog> cList = new ArrayList\<Integer>();
+5) List<? super Dog> bList = new ArrayList\<Animal>();
+6) List<? super Animal> dList = new ArrayList\<Dog>();
 
 The correct answers (the statements that compile) are 1, 2, and 5.  
 The three that won't compile are  
@@ -2007,13 +2007,13 @@ The three that won't compile are
 
 - **Problem** You cannot use wildcard notation in the object creation. So the new ArrayList<? extends Animal>() will not compile.
 
-- **Statement** List<? extends Dog> cList = new ArrayList<Integer>();
+- **Statement** List<? extends Dog> cList = new ArrayList\<Integer>();
 	
 - **Problem** You cannot assign an Integer list to a reference that takes only a Dog (including any subtypes of Dog, of course).
 
-- **Statement** List<? super Animal> dList = new ArrayList<Dog>();
+- **Statement** List<? super Animal> dList = new ArrayList\<Dog>();
 	
-- **Problem** You cannot assign a Dog to <? super Animal>. The Dog is too "low" in the class hierarchy. Only <Animal> or <Object> would have been legal.
+- **Problem** You cannot assign a Dog to <? super Animal>. The Dog is too "low" in the class hierarchy. Only \<Animal> or \<Object> would have been legal.
 	
 
 ### :point_right: Generic Declarations
@@ -2025,7 +2025,7 @@ The API tells you when a parameterized type is expected. For example, this is th
 public interface List<E>
 ```
 
-The <E> is a placeholder for the type you pass in. The List interface is behaving as a generic "template", and when you write your code, you change it from a generic List to a List<Dog> or List<Integer>, and so on.  
+The \<E> is a placeholder for the type you pass in. The List interface is behaving as a generic "template", and when you write your code, you change it from a generic List to a List\<Dog> or List\<Integer>, and so on.  
 
 The E, by the way, is only a convention. Any valid Java identifier would work here, but E stands for "Element," and it's used when the template is a collection. The other main convention is T (stands for "type"), used for, well, things that are NOT collections.  
 
