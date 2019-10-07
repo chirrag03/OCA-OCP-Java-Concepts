@@ -1942,9 +1942,9 @@ public void foo(List<?> list) { }
 public void foo(List<Object> list) { }
 ```
 
-List<Object> is completely different from List<?>  
+List\<Object> is completely different from List<?>  
 
-Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of <Dog>, <Integer>, <JBButton>, <Socket> whatever.   
+Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of \<Dog>, <Integer>, <JBButton>, <Socket> whatever.   
 
 Also, as we are using the wildcard without the keyword super, means that you cannot ADD anything to the list referred to as List<?>.  
 
