@@ -1032,7 +1032,7 @@ class MapTest {
 	Pets p = Pets.CAT;
         
 	System.out.println(m.get(p)); 			// #3
-        System.out.println(m.get(d1)); 			// #4
+        System.out.println(m.get(new Dog("clover"))); 	// #4
         System.out.println(m.get(new Cat())); 		// #5
         System.out.println(m.size()); 			// #6
     }
@@ -1055,15 +1055,13 @@ Let's review the output.
 ---
 
 **Pop quiz: What's the implication of the fact that we were able to successfully use an enum as a key?**
-The implication of this is that java.lang.Enum class overrides equals() and hashCode(). 
+The implication of this is that java.lang.Enum class overrides equals() and hashCode(). Enum class overrides these methods to make them final. Find out why?
 
 ---
 
 **The fourth output** is a String. The important point about this output is that the key used to retrieve the String was made of a Dog object. 
 
 **The fifth output** is null. The important point here is that the get() method failed to find the Cat object that was inserted earlier. (The last line of output confirms that, indeed, 5 key/value pairs exist in the Map.) 
-
----
 
 **Why didn't we find the Cat key String? Why did it work to use an instance of Dog as a key, when using an instance of Cat as a key failed?**
 Dog class overrides equals() and hashCode() while Cat didn't. 
