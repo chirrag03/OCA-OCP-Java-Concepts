@@ -817,6 +817,8 @@ The List and Set classes have toArray() methods, and the Arrays class has a meth
 - Add and remove methods throw UnsupportedOperationException.
 - Changes to the returned list using set(index, value) method reflect in original array.
 
+**Note: The Arrays.asList() returns an instance of the inner class of Arrays (This inner class extends List) and not the ArrayList we saw in collections.**
+
 ```java
 String[] sa = {"one", "two", "three", "four"};
 List sList = Arrays.asList(sa); 			// make a List
