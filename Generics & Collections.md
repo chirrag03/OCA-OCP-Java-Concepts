@@ -266,6 +266,22 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 
 ![Sorry. Image not loaded](./img/interface_class_hierarchy.png)
 
+**:question: Why do the List and Collection interfaces declare the same methods?**  
+As to why List repeats the declarations of the Collection methods, that is because it refines the contracts of many of those methods. For example, the boolean add(E element) method in Collection interface only guarantees that after being called the collection will contain the element. The List interface refines this contract, specifying that the element will be added to the end of the list.  
+
+The other methods in the Collection interface that are refined in the List interface are  
+
+```java
+Iterator<E> iterator();
+Object[] toArray();
+<T extends Object> T[] toArray(T[]);
+boolean remove(Object);
+boolean addAll(Collection<? extends E>);
+boolean equals(Object);
+int hashCode();
+```
+Most of the refinements are simply dealing with the fact that Lists are guaranteed to be ordered, while Collections are not.
+
 
 **Not all collections in the Collections Framework actually implement the Collection interface. In other words, not all collections pass IS-A test for Collection.**  
 
