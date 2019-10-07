@@ -187,7 +187,8 @@ So in order for an object to be located, the search object and the object in the
 So you must override both methods to be absolutely certain that your objects can be used in Collections that use hashing.
 
 **The hashCode() Contract**  
-- Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified.   
+- Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode() method must consistently return the same integer, provided that no information used in equals() comparisons on the object is modified. 
+**Eg: The custom hashcode() method can generate different hashcode for an object during an execution of a Java application if the object is mutable OR the object contains some transient attributes**
 
 - If two objects are equal according to the equals(Object) method, then calling the hashCode() method on each of the two objects must produce the same integer result.  
 
