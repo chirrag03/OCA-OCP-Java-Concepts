@@ -1115,10 +1115,9 @@ When you study a problem like this, it can be useful to think of the two stages 
 **In the third invocation of get(),** the hashcode test succeeds, but the equals() test fails because arthur is NOT equal to clover.
 
 
-**Navigating (Searching) - TreeSets and TreeMaps**
-We've talked about searching lists and arrays. Let's turn our attention to searching TreeSets and TreeMaps. 
+**Navigating (Searching) TreeSets and TreeMaps**
+Java 6 introduced two new interfaces: java.util.NavigableSet and java.util.NavigableMap. These interfaces provide the capability of returning a portion/view of the original collection.  
 
-Java 6 introduced two new interfaces: java.util.NavigableSet and java.util.NavigableMap. 
 How does TreeSet and TreeMap implement these interfaces?
 
 **Imagine that the Santa Cruz–Monterey ferry has an irregular schedule & the daily departure times are stored in military time in a TreeSet.  
