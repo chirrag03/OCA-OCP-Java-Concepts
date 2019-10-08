@@ -1944,6 +1944,8 @@ void foo(List<? extends Serializable> list) // odd, but correct to use "extends"
  ```
  ---
  
+:bulb: Here we restricted that only list of Animal objects or list of objects that extends Animal is allowed and add() is not allowed but what if only the list of objects that are a supertype of Animal is coming ... then we can add Dog or anything that extends Dog. So here is a new keyword.
+ 
 **Wildcard with super keyword**  
 Scenario where you can use a wildcard AND still add to the collection in a safe way.
 
