@@ -1828,6 +1828,43 @@ The compiler thinks it is perfectly fine to add a Dog to an Animal[] array, sinc
 
 **Why the heck does the compiler allow you to take that risk for arrays but not for ArrayList (or any other generic collection)?**  
 
+```java
+class Test {
+  
+  public static void main(String[] args){
+  
+  //No failure at compile time but failure at runtime
+  //This fails at runtime and results in ArrayStoreException because your are assigning a Cat object to an array of type Dog
+  //Compiler cannot detect this as for him its just the assigning of a Cat object to the animal reference. 
+   Animal[] animal = new Dog[3];
+    animal[0] = new Cat();
+
+  //No failure at compile time and no failure at runtime
+  //This works at runtime because your are assigning a Puppy object to an array of type Dog
+    Animal[] animal = new Dog[3];
+    animal[0] = new Puupy();
+    
+    //However if a Dog arraylist could be assigned to an arraylist of Animal, then at runtime JVM would have allowed us to add Cat object to the arraylist as the types are removed at runtime.
+    ArrayList<Animal> ani = new ArrayList<Dog>();
+    ani.add(new Cat());
+  }
+
+}
+
+class Animal{
+
+}
+class Dog extends Animal{
+
+}
+class Cat extends Animal{
+
+}
+class Puppy extends Dog{
+
+}
+```
+
 The reason you can get away with compiling this for arrays is that there is a runtime exception (ArrayStoreException) that will prevent you from putting the wrong type of object into an array. If you send a Dog array into the method that takes an Animal array and you add only Dogs (including Dog subtypes, of course) into the array now referenced by Animal, no problem. But if you DO try to add a Cat to the object that is actually a Dog array, you'll get an exception.  
 
 But there IS no equivalent exception for generics because of type erasure! In other words, at runtime, the JVM KNOWS the type of arrays, but does NOT know the type of a collection. All the generic type information is removed during compilation, so by the time it gets to the JVM, there is simply no way to recognize the disaster of putting a Cat into an ArrayList and vice versa (and it becomes exactly like the problems you have when you use legacy, nontype-safe code).  
