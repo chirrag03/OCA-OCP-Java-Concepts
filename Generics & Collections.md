@@ -1961,7 +1961,7 @@ public static void main(String[] args) {
 }
 ```
 
-By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog."  
+By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog and allow add() of a Dog object or any subtype of Dog"  
 
 This is the key part that makes it work—since a collection declared as any supertype of Dog will be able to accept a Dog as an element. So passing any of the following will work:  
 List\<Object> can take a Dog.   
