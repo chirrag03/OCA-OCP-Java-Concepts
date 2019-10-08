@@ -1541,7 +1541,7 @@ void insert(List list) {
 **Someone added a String into a type-safe ArrayList of type Integer. How can that be?**  
 Remember, the older legacy code was allowed to put anything at all (except primitives) into a collection. And in order to support legacy code, Java 5 and Java 6 allow your newer type-safe code to make use of older code.  
 
-So, the Java 5 compiler onwards, the compiler is forced into letting you compile your new type-safe code even though your code invokes a method of an older class that takes a nontype-safe argument and does who knows what with it.  
+**So, the Java 5 compiler onwards, the compiler is forced into letting you compile your new type-safe code even though your code invokes a method of an older class that takes a nontype-safe argument and does who knows what with it.**  
 
 In fact, the compiler will generate a warning that you're taking a risk sending your type-safe ArrayList into a dangerous method that can have its way with your list and put in Floats, Strings, or even Dogs.  
 
@@ -1550,6 +1550,23 @@ javac TestBadLegacy.java
 Note: TestBadLegacy.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
+
+This compiler warning isn't very descriptive, but you can recompile with -Xlint:unchecked, the compiler shows you exactly which method(s) might be doing something dangerous
+
+```java
+javac -Xlint:unchecked TestBadLegacy.java
+TestBadLegacy.java:17: warning: [unchecked] unchecked call to add(E)
+as a member of the raw type java.util.List
+ list.add(new String("42"));
+ ^
+1 warning
+```
+In this example, since the list argument was not declared with a type, the compiler treats it as legacy code and assumes no risk for what the method puts into the "raw" list.  
+
+No type violations will be caught at runtime by the JVM, until those type violations mess with your code in some other way.  
+From the previous example, imagine you want your code to pull something out of your supposedly type-safe Integer ArrayList that older code put a String into. It compiles (with warnings). It runs… or at least the code that actually adds the String to the list runs. But when you take the String that wasn't supposed to be there out of the list and try to assign it to an Integer reference or invoke an Integer method, you're dead.  
+
+Keep in mind, then, that the problem of putting the wrong thing into a typed (generic) collection does not show up at the time you actually do the add() to the collection. It only shows up later, when you try to use something in the list and it doesn't match what you were expecting. In the old (pre–Java 5) days, you always assumed that you might get the wrong thing out of a collection (since they were all nontype-safe), so you took appropriate defensive steps in your code.   
 
 **Remember that compiler warnings are NOT considered a compiler failure.**
 
@@ -1586,31 +1603,6 @@ List myList = new ArrayList();
 
 **The fact is, you don't NEED runtime protection… until you start mixing up generic and nongeneric code, as we did in the previous example.** Then you can have disasters at runtime. The only advice we have is to pay very close attention to those compiler warnings:
 
-```java
-javac TestBadLegacy.java
-Note: TestBadLegacy.java uses unchecked or unsafe operations.
-Note: Recompile with -Xlint:unchecked for details.
-```
-
-This compiler warning isn't very descriptive, but you can recompile with -Xlint:unchecked. 
-If you do, you'll get something like this:
-
-```java
-javac -Xlint:unchecked TestBadLegacy.java
-TestBadLegacy.java:17: warning: [unchecked] unchecked call to add(E)
-as a member of the raw type java.util.List
- list.add(new String("42"));
- ^
-1 warning
-```
-
-When you compile with the -Xlint:unchecked flag, the compiler shows you exactly which method(s) might be doing something dangerous. In this example, since the list argument was not declared with a type, the compiler treats it as legacy code and assumes no risk for what the method puts into the "raw" list.  
-
-No type violations will be caught at runtime by the JVM, until those type violations mess with your code in some other way.  
-
-From the previous example, imagine you want your code to pull something out of your supposedly type-safe Integer ArrayList that older code put a String into. It compiles (with warnings). It runs… or at least the code that actually adds the String to the list runs. But when you take the String that wasn't supposed to be there out of the list and try to assign it to an Integer reference or invoke an Integer method, you're dead.  
-
-Keep in mind, then, that the problem of putting the wrong thing into a typed (generic) collection does not show up at the time you actually do the add() to the collection. It only shows up later, when you try to use something in the list and it doesn't match what you were expecting. In the old (pre–Java 5) days, you always assumed that you might get the wrong thing out of a collection (since they were all nontype-safe), so you took appropriate defensive steps in your code.   
 
 **Just remember that the moment you turn that type-safe collection over to older, nontype-safe code, your protection vanishes.**  
 
