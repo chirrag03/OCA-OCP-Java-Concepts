@@ -2025,7 +2025,7 @@ class Bar {
 
 This time, class Bar, with the doInsert() method, compiles just fine. The problem is that the TestWildcards code is trying to pass a List\<Integer> into a method that can take ONLY a List\<Object>. And nothing else can be substituted for \<Object>.  
 	
-**By the way, List<? extends Object> and List<?> are absolutely identical!**   
+**By the way, List\<? extends Object> and List\<?> are absolutely identical!**   
 
 **Keep in mind that wildcards can be used only for reference declarations (including arguments, variables, return types, and so on). They can't be used as the type parameter when you create a new typed collection.** Think about that—while a reference can be abstract and polymorphic, the actual object created must be of a specific type. You have to lock down the type when you make the object using new.  
 
