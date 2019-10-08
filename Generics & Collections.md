@@ -1973,6 +1973,12 @@ List\<Dog> can take a Dog.
 So the super keyword in wildcard notation lets you have a restricted, but still possible, way to add to a collection.  
 So, the wildcard gives you polymorphic assignments, but with certain restrictions that you don't have for arrays.   
 
+**Is the game over yet :question:**  
+:bulb: List<? extends Animals> animals here compiler is treating animals as List\<Animals> i.e why forEach on animals is allowed. But what is List<? super Animals> , here animals is treated as ?????...... Compiler doesnt know what is animals..... List <Animals> or List<Animals parent class> or List<Object> i.e Why we cannot do forEach on List<? super Animals> animals using for(Animals a: animals) but as we know everything is an Object for sure we can do for (Object a : animals).
+
+
+
+
 **What is the difference between the two?**  
 ```java
 public void foo(List<?> list) { }
