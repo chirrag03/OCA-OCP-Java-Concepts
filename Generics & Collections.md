@@ -1319,26 +1319,19 @@ Finally, we review the remaining elements in the queue.
 ## Generic Types
 Arrays in Java have always been type-safe—an array declared as type String (String []) can't accept Integers (or ints), Dogs, or anything other than Strings.   
 
-**But remember that before Java 5** there was no syntax for declaring a type-safe collection. To make an ArrayList of Strings, you said,  
+**The Legacy Way to Do Collections**  
+**Remember that before Java 5** there was no syntax for declaring a type-safe collection. To make an ArrayList of Strings, you said,  
 
 ```java
 ArrayList myList = new ArrayList();
-```
-or the polymorphic equivalent
-```java
-List myList = new ArrayList();
+
+//OR the polymorphic equivalent
+
+List myList = new ArrayList(); 			
 ```
 
 There was no syntax that let you specify that myList will take only Strings. And with no way to specify a type for the ArrayList, the compiler couldn't enforce that you put only things of the specified type into the list.  
 
-As of Java 5, we can use generics. Generics aren't just for making type-safe collections, think of collections as the motivation for adding generics to the language.  
-
-The biggest challenge for the Java engineers in adding generics to the language was how to deal with legacy code built without generics. So they had to find a way for Java classes with both type-safe (generic) and nontype-safe (nongeneric/pre–Java 5) collections to still work together.   
-
-While you can integrate Java 5 and later generic code with legacy, nongeneric code, the consequences can be disastrous, and unfortunately, most of the disasters happen at runtime, not compile time. Fortunately, though, most compilers will generate warnings to tell you when you're using unsafe (meaning nongeneric) collections.  
-
-
-**The Legacy Way to Do Collections**  
 Here's a review of a pre–Java 5 ArrayList intended to hold Strings.   
 
 ```java
@@ -1347,8 +1340,7 @@ myList.add("Fred"); 			// OK, it will hold Strings
 myList.add(new Dog()); 			// and it will hold Dogs too
 myList.add(new Integer(42)); 		// and Integers...
 ```
-**A non-generic collection can hold any kind of object and the compiler won’t stop you.
-This meant it was entirely up to the programmer to be… careful. Having no way to guarantee collection type wasn't very programmer-friendly for such a strongly typed language.**  
+**A non-generic collection can hold any kind of object and the compiler won’t stop you. This meant it was entirely up to the programmer to be… careful.**  
 
 **Since a collection could hold anything, therefore the methods that get objects out of the collection had only one kind of return type—java.lang.Object.**  
 
@@ -1356,7 +1348,15 @@ That meant that getting a String back out of our only-Strings-intended list requ
 ```java
 String s = (String) myList.get(0);
 ```
-And since you couldn't guarantee that what was coming out really was a String (since you were allowed to put anything in the list), the cast could fail at runtime. 
+And since you couldn't guarantee that what was coming out really was a String (since you were allowed to put anything in the list), the cast could fail at runtime.  
+
+
+As of Java 5, we can use generics. Generics aren't just for making type-safe collections, think of collections as the motivation for adding generics to the language.  
+
+The biggest challenge for the Java engineers in adding generics to the language was how to deal with legacy code built without generics. So they had to find a way for Java classes with both type-safe (generic) and nontype-safe (nongeneric/pre–Java 5) collections to still work together.   
+
+While you can integrate Java 5 and later generic code with legacy, nongeneric code, the consequences can be disastrous, and unfortunately, most of the disasters happen at runtime, not compile time. Fortunately, though, most compilers will generate warnings to tell you when you're using unsafe (meaning nongeneric) collections.  
+
 
 **So generics takes care of both ends (the putting in and getting out) by enforcing the type of your collections.**
 Let's update the String list:
@@ -1390,7 +1390,7 @@ for (String s : myList) {
 }
 ```
 
-**You can declare a type parameter for a method argument, which then makes the argument a type-safe reference:**
+**Declaring type safe method argument**
 ```java
 void takeListOfStrings(List < String > strings) {
     strings.add("foo"); 			// no problem adding a String
@@ -1402,7 +1402,7 @@ void takeListOfStrings(List < String > strings) {
 }
 ```
 
-**Return types can obviously be declared type-safe as well:**
+**Declaring type safe Return types**
 ```java
 public List<Dog> getDogList() {
  List<Dog> dogs = new ArrayList<Dog>();
@@ -1947,7 +1947,7 @@ void foo(List<? extends Serializable> list) // odd, but correct to use "extends"
 :bulb: Here we restricted that only list of Animal objects or list of objects that extends Animal is allowed and add() is not allowed but what if only the list of objects that are a supertype of Animal is coming ... then we can add Dog or anything that extends Dog. So here is a new keyword.
  
 **Wildcard with super keyword**  
-Scenario where you can use a wildcard AND still add to the collection in a safe way.
+Scenario where you can use a wildcard AND still add to the collection (only sometimes) in a safe way.
 
 **Imagine, for example, that you declared the method this way:**  
 ```java
@@ -1963,20 +1963,15 @@ public static void main(String[] args) {
 }
 ```
 
-By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog and allow add() of a Dog object or any subtype of Dog"  
+By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog and allow to add an object of Dog type or any subtype of Dog"  
 
-This is the key part that makes it work—since a collection declared as any supertype of Dog will be able to accept a Dog as an element. So passing any of the following will work:  
-List\<Object> can take a Dog.   
-List\<Animal> can take a Dog.   
-List\<Dog> can take a Dog.   
+This is the key part that makes it work—since a collection declared as any supertype of Dog will be able to accept a Dog as an element. So passing any of the following will work:  List\<Object>  or  List\<Animal>  or  List\<Dog>.   
 
 So the super keyword in wildcard notation lets you have a restricted, but still possible, way to add to a collection.  
 So, the wildcard gives you polymorphic assignments, but with certain restrictions that you don't have for arrays.   
 
 **Is the game over yet :question:**  
-:bulb: List<? extends Animals> animals here compiler is treating animals as List\<Animals> i.e why forEach on animals is allowed. But what is List<? super Animals> , here animals is treated as ?????...... Compiler doesnt know what is animals..... List <Animals> or List<Animals parent class> or List<Object> i.e Why we cannot do forEach on List<? super Animals> animals using for(Animals a: animals) but as we know everything is an Object for sure we can do for (Object a : animals).
-
-
+:bulb: List<? extends Animals> animals here compiler is treating animals as List\<Animals> i.e why forEach on animals is allowed. But what is List<? super Animals> , here animals is treated as ?????...... Compiler doesnt know what is animals..... List <Animals> or List<Animals parent class> or List<Object> i.e Why we cannot do forEach on List<? super Animals> animals using for(Animals a: animals) but as we know everything is an Object for sure we can do for (Object a : animals).  
 
 
 **What is the difference between the two?**  
@@ -1985,11 +1980,7 @@ public void foo(List<?> list) { }
 public void foo(List<Object> list) { }
 ```
 
-List\<Object> is completely different from List<?>  
-
-Wildcard <?> without the keywords extends or super, simply means that any type of List can be assigned to the argument. Eg: List of \<Dog>, \<Integer>, \<JBButton>, \<Socket> whatever.   
-
-Also, as we are using the wildcard without the keyword super, means that you cannot ADD anything to the list referred to as List<?>.  
+Wildcard <?> simply means that any type of List can be assigned to the argument. Eg: List of \<Dog>, \<Integer>, \<JBButton> whatever. Also, as we are using the wildcard without the keyword super, means that you cannot ADD anything to the list referred to as List<?>.  
 
 List\<Object> means that the method can take ONLY a List\<Object>. Not a List\<Dog> or a List\<Cat>. It does, however, mean that you can add to the list, since the compiler has already made certain that you're passing only a valid List\<Object> into the method.  
 	
@@ -1999,37 +1990,23 @@ import java.util.*;
 public class TestWildcards {
     public static void main(String[] args) {
         List < Integer > myList = new ArrayList < Integer > ();
-        Bar bar = new Bar();
-        bar.doInsert(myList);
+        doInsert(myList);
     }
-    class Bar {
-        void doInsert(List << ? > list) {
-            list.add(new Dog());
-        }
-    }
-}
-```
-
-The <?> wildcard allows a list of ANY type to be passed to the method, but the add() method is not valid, for the reasons we explored earlier (that you could put the wrong kind of thing into the collection). So this time, the TestWildcards class is fine, but the Bar class won't compile because it does an add() in a method that uses a wildcard (without super).   
-
-What if we change the doInsert() method to this:  
-```java
-import java.util.*;
-public class TestWildcards {
-    public static void main(String[] args) {
-        List < Integer > myList = new ArrayList < Integer > ();
-        Bar bar = new Bar();
-        bar.doInsert(myList);
-    }
-}
-class Bar {
-    void doInsert(List < Object > list) {
+    
+    //Case 1
+    public static void doInsert(List < ? > list) {
         list.add(new Dog());
-    }
+    }    
+    
+    //Case 2
+    public static void doInsert(List < Object > list) {
+        list.add(new Dog());
+    }    
 }
 ```
+**Case 1:** The <?> wildcard allows a list of ANY type to be passed to the method, but the add() method is not valid, for the reasons we explored earlier (that you could put the wrong kind of thing into the collection). So, the TestWildcards  won't compile because it does an add() in a method that uses a wildcard (without super).   
 
-This time, class Bar, with the doInsert() method, compiles just fine. The problem is that the TestWildcards code is trying to pass a List\<Integer> into a method that can take ONLY a List\<Object>. And nothing else can be substituted for \<Object>.  
+**Case 2:** The problem is that the TestWildcards code is trying to pass a List\<Integer> into a method that can take ONLY a List\<Object>. And nothing else can be substituted for \<Object>.  
 	
 **By the way, List\<? extends Object> and List\<?> are absolutely identical!**   
 
@@ -2245,11 +2222,10 @@ public class AnimalHolder < T extends Animal > {  			// use "T" instead of "?"
 ```
 
 ### :point_right: Creating Generic Methods
-Until now, every eg we've seen uses class parameter type—the type declared with the class name. For eg, the UseTwo declaration, uses the T and X placeholders throughout the code. **But it's possible to define a parameterized type at a more granular level—a method.**  
+Until now, every eg we've seen uses class parameter type (i.e. the type declared with the class name).  
+**But it's possible to define a parameterized type at a more granular level—a method, for a non generic class.**  
 
 **Imagine you want to create a method that takes an instance of any type, instantiates an ArrayList of that type, and adds the instance to the ArrayList. The class itself doesn't need to be generic; basically, we just want a utility method that we can pass a type to and that can use that type to construct a type-safe collection.**  
-
-For example:  
 ```java
 import java.util.*;
 public class CreateAnArrayList {
@@ -2261,8 +2237,8 @@ public class CreateAnArrayList {
     }
 }
 ```
-
-**Using a generic method, allows to declare a method without a specific type and then get the type information based on the type of the object passed to the method.**  
+**For generic methods, you must declare the type variable BEFORE the return type of the method, if the type is not specified by class parameter type.**  
+**The <**__T> before void simply defines what T is before you use it as a type in the argument. You _MUST_ declare the type like that unless type is specified for the class.__  
 
 Invoking the makeArrayList() method with a Dog instance, the method will behave like this:
 **(not in the bytecode, remember—we're describing how it appears to behave, not how it actually gets it done).**  
@@ -2276,18 +2252,6 @@ public void makeArrayList(Dog t) {
 
 ---
 
-**The strangest thing about generic methods is that you must declare the type variable BEFORE the return type of the method:**  
-
-```java
-public <T> void makeArrayList(T t)
-```
-
-**The <**__T> before void simply defines what T is before you use it as a type in the argument. You _MUST_ declare the type like that unless type is specified for the class.__
-
-In CreateAnArrayList, the class is not generic, so there's no type parameter placeholder we can use. So we declared a type parameter before the method return type.
-
----
-
 **You can put boundaries on the type you declare.** For eg, if you want to restrict the makeArrayList() method to only Number or its subtypes (Integer, Float, and so on):
 
 ```java
@@ -2297,14 +2261,13 @@ public <T extends Number> void makeArrayList(T t)
 **Key Points**  
 
 **1) In order to use a type variable like T, you must have declared it either as the class parameter type or in the method, before the return type.**  
-It's tempting to forget that the method argument is NOT where you declare the type parameter variable T. 
+If we forget to declare the type parameter <T>, at the class level or method level, then the compiler actually looks for a class named T i.e. the argument is like any other type declaration for a variable. For eg:
 ```java
 public void makeList(T t) { }
 ```
-Only way for this to be legal is if there is actually a class named T, in which case the argument is like any other type declaration for a variable. 
 
 **2) What about constructor arguments?**   
-They, too, can be declared with a generic type, but then it looks even stranger, since constructors have no return type at all:  
+They can be declared with a generic type, but then it looks even stranger, since constructors have no return type at all:  
 ```java
 public class Radio {
  public <T> Radio(T t) { } // legal constructor
@@ -2315,16 +2278,18 @@ public class Radio {
 ```java
 class X { public <X> X(X x) { } }
 ```
-The X that is the constructor name has no relationship to the type declaration, which has no relationship to the constructor argument identifier, which is also, of course, X. The compiler is able to parse this and treat each of the different uses of X independently.  
+The X that is the constructor name has no relationship to the type declaration, which has no relationship to the constructor argument identifier, which is also, of course, X. The compiler is able to parse this and treat each of the different uses of X independently. 
 
-**4) One of the most common mistakes programmers make when creating generic classes or methods is to use a <**__?> in the wildcard syntax rather than a type variable <__**T>, <**__E>, and so on. This code might look right, but isn't:__
+
+**4) A common mistake programmers make when creating generic classes or methods is to use a <**__?> in the wildcard syntax rather than a type variable <__**T>, <**__E>, and so on. This code might look right, but isn't:__
 ```java
 public class NumberHolder<? extends Number> { }
 
 public class NumberHolder<?> { ? aNum; } 
 ```
+**While the question mark works when declaring a reference for a variable, it does NOT work for generic class and method declarations. Why?**  
+Because there could be a method already declared that takes an argument eg: (ArrayList<? extends Animal> animal). Now the compiler would not know the ? represents a generic type or is it because the method can accept any list of type Animal or its supertype.
 
-**While the question mark works when declaring a reference for a variable, it does NOT work for generic class and method declarations.**
 
 
 
