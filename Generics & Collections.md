@@ -380,7 +380,10 @@ A TreeMap is a sorted Map i.e sorted by the natural order of the elements by def
 A Queue is designed to hold a list of things to be processed in some way. Queues support all of the standard Collection methods and they also have methods to add and subtract elements and review queue elements. 
 
 **_PriorityQueue_**   
-Since the LinkedList class has been enhanced to implement the Queue interface, basic queues can be handled with a LinkedList. The purpose of a PriorityQueue is to create a "priority-in, priority out" queue as opposed to a typical FIFO queue. A PriorityQueue's elements are ordered either by natural ordering (in which case the elements that are sorted first will be accessed first) or according to a Comparator. In either case, the elements' ordering represents their relative priority.
+Since the LinkedList class has been enhanced to implement the Queue interface, basic queues can be handled with a LinkedList. The purpose of a PriorityQueue is to create a "priority-in, priority out" queue as opposed to a typical FIFO queue. A PriorityQueue's elements are sorted either by natural ordering (in which case the elements that are sorted first will be accessed first) or according to a Comparator. 
+
+**:bulb: Thus when you poll elements from the Priority Queue, they come out according to priority from highest to lowest. But if you use an iterator to traverse on this queue, then the order is not guaranteed as iterator just traverses the array which stores the heap.**
+
 
 ![Sorry. Image not loaded](./img/table_11-2.png)
 
