@@ -1964,9 +1964,9 @@ public static void main(String[] args) {
 By saying <? super Dog>, we're saying, "Hey, compiler. Please accept any List with a generic type that is of type Dog or a supertype of Dog."  
 
 This is the key part that makes it work—since a collection declared as any supertype of Dog will be able to accept a Dog as an element. So passing any of the following will work:  
-List<Object> can take a Dog.   
-List<Animal> can take a Dog.   
-List<Dog> can take a Dog.   
+List\<Object> can take a Dog.   
+List\<Animal> can take a Dog.   
+List\<Dog> can take a Dog.   
 
 So the super keyword in wildcard notation lets you have a restricted, but still possible, way to add to a collection.  
 So, the wildcard gives you polymorphic assignments, but with certain restrictions that you don't have for arrays.   
