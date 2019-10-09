@@ -1442,7 +1442,7 @@ List < Object > myList = new ArrayList < Object > (); 		// holds ANY object type
 **Declaring a List with a type parameter of <**__Object> makes a collection that works in almost the same way as the original pre–Java 5 nongeneric collection—you can put ANY Object type into the collection. You'll see a little later that nongeneric collections and collections of type <__**Object> aren't entirely the same, but most of the time, the differences do not matter.**  
 
 
-**:open_mouth While introducing type safe collections, JAVA had to maintain backward compatibility i.e. both the old non-typesafe code as well as new typesafe code should work be able to work together. Let's look how is this achieved :question: First let's look at the problem caused when using the typesafe and non-typesafe collections.**  
+**:open_mouth: While introducing type safe collections, JAVA had to maintain backward compatibility i.e. both the old non-typesafe code as well as new typesafe code should work be able to work together. Let's look how is this achieved :question: First let's look at the problem caused when using the typesafe and non-typesafe collections.**  
 
 
 **Generics and Legacy Code**  
@@ -1683,8 +1683,6 @@ List < Object > list = new ArrayList < JButton > (); 	// NO!
 
 **Polymorphism does not work the same way for generics as it does with arrays.** Why are the rules for typing of arrays different from the rules for generic typing?   
 
-
-### :point_right: Generic Methods
 One of the benefits of polymorphism is that you can declare, say, a method argument of a particular type and at runtime be able to have that argument refer to any subtype.  
 
 Consider a polymorphism example.   
