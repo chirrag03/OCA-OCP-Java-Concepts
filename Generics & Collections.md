@@ -1432,7 +1432,6 @@ Dog d = (Dog) getDogList().get(0);
 ```
 
 **What if you liked the fact that before generics you could make an ArrayList that could hold any kind of object?**
-
 ```java
 List myList = new ArrayList(); 					// old-style, non-generic
 
@@ -1442,7 +1441,12 @@ List < Object > myList = new ArrayList < Object > (); 		// holds ANY object type
 
 **Declaring a List with a type parameter of <**__Object> makes a collection that works in almost the same way as the original pre–Java 5 nongeneric collection—you can put ANY Object type into the collection. You'll see a little later that nongeneric collections and collections of type <__**Object> aren't entirely the same, but most of the time, the differences do not matter.**  
 
+
+**:open_mouth While introducing type safe collections, JAVA had to maintain backward compatibility i.e. both the old non-typesafe code as well as new typesafe code should work be able to work together. Let's look how is this achieved :question: First let's look at the problem caused when using the typesafe and non-typesafe collections.**  
+
+
 **Generics and Legacy Code**  
+
 **How to update nongeneric code to make it generic?**  
 You just add a type in angle brackets (<>) immediately following the collection type in BOTH the variable declaration and the constructor call (or you use the Java 7 diamond syntax), including any place you declare a variable (so that means arguments and return types too).   
 
@@ -1461,7 +1465,7 @@ public List<String> changeStrings(ArrayList<String> s) { }
 
 //If there's code that used the nongeneric version & performed cast to get things out, that won't break anyone's code:
 Integer i = (Integer) list.get(0); 	// cast no longer needed, but it won't hurt 
-```
+```  
 
 **Mixing Generic and Nongeneric Collections**  
 
@@ -1577,8 +1581,6 @@ The compiler does NOT know whether the insert() method is adding the right thing
 
 **Why does the JVM let old code add a String into your ArrayList without any problems or exceptions at all?**  
 
-Just a quiet, behind-the-scenes, total violation of your type safety that you might not discover until the worst possible moment.  
-
 At runtime, ALL collection code—both legacy and new Java 5 code you write using generics—looks exactly like the pregeneric version of collections. None of your typing information exists at runtime.   
 
 Think of generics as strictly a compile-time protection. The compiler uses generic type information (the in the angle brackets) to make sure that your code doesn't put the wrong things into a collection and that you do not assign what you get from a collection to the wrong reference type.   
@@ -1586,7 +1588,7 @@ But NONE of this protection or the typing information exists at runtime. The JVM
 
 Through a process called "type erasure," the compiler does all of its verifications on your generic code and then strips the type information out of the class bytecode.   
 
-This is a little different from arrays, which give you BOTH compile-time protection and runtime protection. **Why did they do generics this way? Why is there no type information at runtime?** To support legacy code. At runtime, collections are collections just like the old days.   
+**This is a little different from arrays, which give you BOTH compile-time protection and runtime protection. Why did they do generics this way? Why is there no type information at runtime?** To support legacy code. At runtime, collections are collections just like the old days.   
 
 In other words, even though you WROTE
 ```java
@@ -1790,67 +1792,9 @@ According to the polymorphism assignment rules, a method that takes an ArrayList
 So we have two real issues:  
 1. Why doesn't this work? 			2. How do you get around it?
 
-**We'll answer the questions, but first, let's consider this perfectly legal scenario:**
-We can add an instance of a subtype into an array or collection declared with a supertype. So this part works with both arrays and generic collections.
-
+**We'll answer the questions, but first, let's consider these scenarios for arrays:**  
+Let say we have the following classes:
 ```java
-Animal[] animals = new Animal[3];
-animals[0] = new Cat();
-animals[1] = new Dog();
-
-List<Animal> animals = new ArrayList<Animal>();
-animals.add(new Cat()); // OK
-animals.add(new Dog()); // OK
-```
-
-Using an abstract supertype for array declaration allows the array to hold objects of multiple subtypes of the supertype, and then everything in it can respond to method calls defined in the Animal interface. So here, we're using polymorphism not for the object that the array reference points to, but rather what the array can actually HOLD—in this case, any subtype of Animal.  
-
-**The question is still out there—Why can't you pass an ArrayList<**__Dog> into a method with an argument of ArrayList<__**Animal>? Why is it bad for ArrayList but not arrays?**   
-
-Actually, the problem IS just as dangerous whether you're using arrays or a generic collection. It's just that the compiler and JVM behaves differently for arrays versus generic collections.  
-
-**The reason it is dangerous to pass a collection (array or ArrayList) of a subtype into a method that takes a collection of a supertype is because you might add something WRONG!** Consider the example:  
-
-```java
-public void foo() {
- Cat[] cats = {new Cat(), new Cat()};
- addAnimal(cats); 		// no problem, send the Cat[] to the method
-}
-
-public void addAnimal(Animal[] animals) {
- animals[0] = new Dog(); 	// Eeek! We just put a Dog in a Cat array!
-}
-```
-
-The compiler thinks it is perfectly fine to add a Dog to an Animal[] array, since a Dog can be assigned to an Animal reference. The problem is that if you passed in an array of an Animal subtype (Cat, Dog, or Bird) at runtime, the compiler does not know.   
-
-**THIS is the scenario we're trying to prevent, regardless of whether it's an array or an ArrayList. The difference is that the compiler lets you get away with it for arrays, but not for generic collections.**  
-
-**Why the heck does the compiler allow you to take that risk for arrays but not for ArrayList (or any other generic collection)?**  
-
-```java
-class Test {
-  
-  public static void main(String[] args){
-  
-  //No failure at compile time but failure at runtime
-  //This fails at runtime and results in ArrayStoreException because your are assigning a Cat object to an array of type Dog
-  //Compiler cannot detect this as for him its just the assigning of a Cat object to the animal reference. 
-   Animal[] animal = new Dog[3];
-    animal[0] = new Cat();
-
-  //No failure at compile time and no failure at runtime
-  //This works at runtime because your are assigning a Puppy object to an array of type Dog
-    Animal[] animal = new Dog[3];
-    animal[0] = new Puupy();
-    
-    //However if a Dog arraylist could be assigned to an arraylist of Animal, then at runtime JVM would have allowed us to add Cat object to the arraylist as the types are removed at runtime.
-    ArrayList<Animal> ani = new ArrayList<Dog>();
-    ani.add(new Cat());
-  }
-
-}
-
 class Animal{
 
 }
@@ -1865,27 +1809,51 @@ class Puppy extends Dog{
 }
 ```
 
+Case 1: We can add an instance of a subtype into an array or collection declared with a supertype. So this part works with both arrays and generic collections.
+
+```java
+Animal[] animals = new Animal[3];
+animals[0] = new Cat();
+animals[1] = new Dog();
+
+List<Animal> animals = new ArrayList<Animal>();
+animals.add(new Cat()); // OK
+animals.add(new Dog()); // OK
+```
+
+Using an abstract supertype for array declaration allows the array to hold objects of multiple subtypes of the supertype, and then everything in it can respond to method calls defined in the Animal interface. So here, we're using polymorphism not for the object that the array reference points to, but rather what the array can actually HOLD—in this case, any subtype of Animal.
+
+Case 2:
+```java
+    Animal[] animal = new Dog[3];
+    animal[0] = new Puupy();
+ ```  
+No failure at compile time because your are assigning a Puppy object to an array location of reference type animal.
+No failure at runtime because your are assigning a Puppy object to an array location which is of type Dog.  
+  
+Case 3:
+```java
+   Animal[] animal = new Dog[3];
+   animal[0] = new Cat();
+```  
+No failure at compile time because for the compiler it is perfectly fine to add a Cat object to an Animal reference.
+But fails at runtime and results in ArrayStoreException because you are assigning a Cat object to an array of reference animal but type Dog.
+
+**The question is still out there—Why can't you pass an ArrayList<**__Dog> into a method with an argument of ArrayList<__**Animal>? Why is it bad for ArrayList but not arrays?**   
+
+**The scenario in case 3 is the scenario we're trying to prevent, the problem IS just as dangerous regardless of whether it's an array or an ArrayList. The reason it is dangerous to pass a collection (array or ArrayList) of a subtype into a method that takes a collection of a supertype is because you might add something WRONG!**  
+
+**The difference is that the compiler lets you get away with it for arrays, but not for generic collections. It's just that the compiler and JVM behaves differently for arrays versus generic collections.**  
+
+**Why the heck does the compiler allow you to take that risk for arrays but not for ArrayList (or any other generic collection)?**  
+
 The reason you can get away with compiling this for arrays is that there is a runtime exception (ArrayStoreException) that will prevent you from putting the wrong type of object into an array. If you send a Dog array into the method that takes an Animal array and you add only Dogs (including Dog subtypes, of course) into the array now referenced by Animal, no problem. But if you DO try to add a Cat to the object that is actually a Dog array, you'll get an exception.  
 
 But there IS no equivalent exception for generics because of type erasure! In other words, at runtime, the JVM KNOWS the type of arrays, but does NOT know the type of a collection. All the generic type information is removed during compilation, so by the time it gets to the JVM, there is simply no way to recognize the disaster of putting a Cat into an ArrayList and vice versa (and it becomes exactly like the problems you have when you use legacy, nontype-safe code).  
 
-So this actually IS legal code:  
-
-```java
-public void addAnimal(List < Animal > animals) {
-    animals.add(new Dog()); 	// this is always legal, since Dog can be assigned to an Animal reference
-}
-
-public static void main(String[] args) {
-    List < Animal > animals = new ArrayList < Animal > ();
-    animals.add(new Dog());
-    animals.add(new Dog());
-    AnimalDoctorGeneric doc = new AnimalDoctorGeneric();
-    doc.addAnimal(animals); 	// OK, since animals matches the method arg
-}
- ```
+**Had JAVA allowed passing an arraylist of subtype to an arraylist of supertype, then someone might have added an object of wrong type, as we do not have the type at runtime.**  
  
- As long as the only thing you pass to the addAnimals(List\<Animal>) is an ArrayList\<Animal>, the compiler is pleased—knowing that any Animal subtype you add will be valid (you can always add a Dog to an Animal collection, yada, yada, yada).   
+Thus, as long as the only thing you pass to the addAnimals(List\<Animal>) is an ArrayList\<Animal>, the compiler is pleased—knowing that any Animal subtype you add will be valid (you can always add a Dog to an Animal collection, yada, yada, yada).   
 But if you try to invoke addAnimal() with an argument of any OTHER ArrayList type, the compiler will stop you, since at runtime the JVM would have no way to stop you from adding a Dog to what was created as a Cat collection.  
 	
 	
