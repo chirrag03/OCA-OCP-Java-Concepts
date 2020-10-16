@@ -1,7 +1,10 @@
 ## Even Odd Numbers Using Semaphores
 
+> **Constraints:**    
+> A thread prints odd numbers  
+> Another thread prints even numbers  
+> They should print in a sequential manner   
 
-### A thread prints odd numbers. Another thread prints even numbers. They should print in a sequential manner.
 
 ```java
 package OddEvenNumbers;
