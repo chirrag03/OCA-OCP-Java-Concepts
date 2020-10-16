@@ -1,8 +1,8 @@
 ## Even Odd Numbers Using Semaphores
 
 > **Constraints:**    
-> A thread prints odd numbers  
-> Another thread prints even numbers  
+> A thread prints odd numbers from 1 to max  
+> Another thread prints even numbers from 2 to max  
 > They should print in a sequential manner   
 
 
