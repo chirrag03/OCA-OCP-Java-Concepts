@@ -1,10 +1,10 @@
 ## Producer Consumer Using Blocking Queue
 
-> **Constraints:**    
-> Producer thread produce a new resource in every 1 second and put it in a blocking queue.    
-> Consumer thread takes 1 seconds to process consumed resource from blocking queue.    
-> Max capacity of taskQueue is 5000 i.e. maximum 5000 resources can exist inside ‘taskQueue’ at any given time.     
-> Both threads run infinitely.  
+Implementing producer consumer using a blocking queue is better as we abstract out the implementation of synchronizing threads within the Blocking Queue class itself. 
+
+**Blocking Queue**  
+A blocking queue is a queue that blocks when you try to dequeue from it and the queue is empty, or if you try to enqueue items to it and the queue is already full. A thread trying to dequeue from an empty queue is blocked until some other thread inserts an item into the queue. A thread trying to enqueue an item in a full queue is blocked until some other thread makes space in the queue, either by dequeuing one or more items or clearing the queue completely.
+
 
 
 ```java
