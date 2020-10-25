@@ -115,8 +115,10 @@ class BlockingQueue<T> {
 }
 
 /*
-Notice how notifyAll() is only called from enqueue() and dequeue() if the queue size is equal to the size bounds (0 or limit). 
-If the queue size is not equal to either bound when enqueue() or dequeue() is called, there can be no threads waiting to either enqueue or dequeue items.
+Notice:
+notifyAll() is only called from enqueue() and dequeue() if the queue size is equal to the size bounds (0 or limit). 
+If the queue size is not equal to either bound when enqueue() or dequeue() is called, there can be no threads 
+waiting to either enqueue or dequeue items.
 */
 
 
