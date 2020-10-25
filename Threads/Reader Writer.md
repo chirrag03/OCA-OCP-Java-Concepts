@@ -2,7 +2,7 @@
 
 > **Constraints:**    
 > Multiple readers can read if no one is writing, and no writers are waiting to lock for writing.    
-> Only one writer can write only if no threads are currently reading.  
+> Only one writer can write and that too only if no threads are currently reading.  
 
 
 ```java
