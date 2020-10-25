@@ -1,4 +1,4 @@
-## Producer Consumer
+## Producer Consumer Using Blocking Queue
 
 > **Constraints:**    
 > Producer thread produce a new resource in every 1 second and put it in a blocking queue.    
