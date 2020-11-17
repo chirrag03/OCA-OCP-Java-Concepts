@@ -136,7 +136,7 @@ Once the start() method is called, the thread is considered **alive** (even thou
 
 A thread is considered **dead** (no longer alive) after the run() method completes. The isAlive() method is the best way to determine if a thread has been started but has not yet completed its run() method.
 
-**What happens after you call start()? **  
+**What happens after you call start()?**  
 ■ A new thread of execution starts (with a new call stack).   
 ■ The thread moves from the new state to the runnable state.   
 ■ When the thread gets a chance to execute, its target run() method will run. Be sure you remember the following: You call start() on a Thread instance, not on a Runnable instance. 
@@ -186,7 +186,7 @@ It is a live Thread object, but not yet a thread of execution. At this point, th
 
 ![image alt text](image_3.png)
 
-	|----------Alive---------|
+		|----------Alive---------|
 
 ■ **Runnable** 
 
@@ -228,7 +228,7 @@ To solve this pause a thread (sleep) for five minutes after each download.
 
 **Note:** sleep() method can throw a checked **InterruptedException**, so you must acknowledge the exception.
 
-**Q:[What kind of behaviour causes an interrupted exception**?](https://stackoverflow.com/questions/225194/what-kind-of-behaviour-causes-an-interrupted-exception)  
+**Q:[What kind of behaviour causes an interrupted exception?]**(https://stackoverflow.com/questions/225194/what-kind-of-behaviour-causes-an-interrupted-exception)  
 If some other Thread calls non static method t1.interrupt(), while the thread is sleeping.
 
 **When a thread wakes up after sleep() expires, it will return to the runnable state and not the running state.**
@@ -329,13 +329,13 @@ Points to be noted in the link above
 
 **Key Points:**
 
-1) A thread can acquire more than one lock. For example, a thread can enter a synchronized method, thus acquiring a lock, and then immediately invoke a synchronized method on a different object, thus acquiring that lock as well. As the stack unwinds, locks are released again. Also, if a thread acquires a lock and then attempts to call a synchronized method on that same object, no problem. The JVM knows that this thread already has the lock for this object, so the thread is free to call another synchronized method on the same object, using the lock the thread already has.
+**1) A thread can acquire more than one lock.** For example, a thread can enter a synchronized method, thus acquiring a lock, and then immediately invoke a synchronized method on a different object, thus acquiring that lock as well. As the stack unwinds, locks are released again. Also, if a thread acquires a lock and then attempts to call a synchronized method on that same object, no problem. The JVM knows that this thread already has the lock for this object, so the thread is free to call another synchronized method on the same object, using the lock the thread already has.
 
 **2) What Happens If a Thread Can't Get the Lock?**
 
 If a thread tries to enter a synchronized method and the lock is already taken, the thread is said to be blocked on the object's lock. Essentially, the thread goes into a kind of pool for that particular object and has to sit there until the lock is released and the thread can again become runnable/running. Just because a lock is released doesn't mean any particular thread will get it. There might be three threads waiting for a single lock, for example, and there's no guarantee that the thread that has waited the longest will get the lock first.
 
-3) Not all methods in a class need to be synchronized. A class can have both synchronized and non-synchronized methods.
+**3) Not all methods in a class need to be synchronized. A class can have both synchronized and non-synchronized methods.**
 
 If a class has both synchronized and non-synchronized methods, multiple threads can still access the class's non-synchronized methods! If you have methods that don't access the data you're trying to protect, then you don't need to synchronize them. 
 
@@ -480,7 +480,7 @@ NOTE: When user calls wait. Thread is sent to wait state.
 When a thread was in runnable and tries to acquire a lock, but can’t do then it goes to a blocked state and will return to runnable when resource becomes available.
 
 **Reader Writer Problem (Diff between notify() and notifyAll())**  
-### [https://java2blog.com/wait-notify-and-notifyall-method-in/](https://java2blog.com/wait-notify-and-notifyall-method-in/)
+[https://java2blog.com/wait-notify-and-notifyall-method-in/](https://java2blog.com/wait-notify-and-notifyall-method-in/)
 
 **Using wait( ) in a Loop**   
 In the (Reader/Writer) example, when the Readers run, they just start waiting right away. They don't do anything to see if the event they're waiting for has already happened. 
@@ -746,7 +746,7 @@ By having multiple conditions for a lock, you can effectively categorize the thr
 
 Conditions can also be used when you can't use a BlockingQueue to coordinate the activities of two or more threads.
 
-**[Difference between Semaphore and Condition (ReentrantLock**)](https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock)
+**[Difference between Semaphore and Condition (ReentrantLock)]**(https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock)
 
 [https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock](https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock)
 
