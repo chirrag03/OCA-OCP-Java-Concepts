@@ -32,6 +32,8 @@ A **user thread** is a **thread** that is created by the application (**user**),
 
 JVM exits an application (i.e. JVM will shut down) only when all user threads are complete, regardless of the state of any daemon threads. JVM doesn't care about letting daemon threads complete.
 
+<br>
+
 ### **Creating Threads in Java**
 
 **1) Implement the Runnable interface**  
@@ -48,33 +50,33 @@ class MyTask implements Runnable{
 public class ThreadCreation {
 	public static void main(String[] args) {
 		
-//We can pass an object of the runnable implementation
-		MyTask m1 = new MyTask(); //Or Runnable m1 = new MyTask();  
-		Thread t1 = new Thread(m1);
-		t1.start();
+	//We can pass an object of the runnable implementation
+	MyTask m1 = new MyTask(); //Or Runnable m1 = new MyTask();  
+	Thread t1 = new Thread(m1);
+	t1.start();
 
-//We can simplify this code by not creating a reference variable to MyThread 
-		Thread t2 = new Thread(new MyTask());
-		t2.start();
+	//We can simplify this code by not creating a reference variable to MyThread 
+	Thread t2 = new Thread(new MyTask());
+	t2.start();
 
-//We can simplify this by not creating a reference variable to Thread
-		(new Thread(new MyTask())).start();
-		
-//We can pass the implementation of runnable using anonymous classes
-		Thread t3 = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				System.out.println("Thread using anonymous class");
-			}
-		});
-		t3.start();
-		
-//We can pass the implementation of runnable using lambda
-		Runnable runnable = () -> { 
-			System.out.println("Thread using lambda");
-		};
-		Thread t4 = new Thread(runnable);
-		t4.start();
+	//We can simplify this by not creating a reference variable to Thread
+	(new Thread(new MyTask())).start();
+
+	//We can pass the implementation of runnable using anonymous classes
+	Thread t3 = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			System.out.println("Thread using anonymous class");
+		}
+	});
+	t3.start();
+
+	//We can pass the implementation of runnable using lambda
+	Runnable runnable = () -> { 
+		System.out.println("Thread using lambda");
+	};
+	Thread t4 = new Thread(runnable);
+	t4.start();
 	}
 }
 ```
@@ -97,27 +99,27 @@ public class ThreadCreation2 {
 
 	public static void main(String[] args) {
 		
-//Create an object of the class extending Thread, then call start()
-		MyNewThread t1 = new MyNewThread();
-		t1.start();
-		
-		
-//We can simplify this by not creating a reference variable to MyNewThread
-		(new MyNewThread()).start();
-		
-		
-//We can directly pass the implementation using anonymous classes
-		Thread t2 = new Thread() {
-		    @Override
-		    public void run() {
-				System.out.println("Thread using anonymous class");
-		    }
-		};
-		t2.start();
-		
-		
-//We can pass the implementation using lambda
-		Thread t4 = new Thread(() -> System.out.println("Thread using lambda"));
+	//Create an object of the class extending Thread, then call start()
+	MyNewThread t1 = new MyNewThread();
+	t1.start();
+
+
+	//We can simplify this by not creating a reference variable to MyNewThread
+	(new MyNewThread()).start();
+
+
+	//We can directly pass the implementation using anonymous classes
+	Thread t2 = new Thread() {
+	    @Override
+	    public void run() {
+			System.out.println("Thread using anonymous class");
+	    }
+	};
+	t2.start();
+
+
+	//We can pass the implementation using lambda
+	Thread t4 = new Thread(() -> System.out.println("Thread using lambda"));
 		t4.start();
 	}
 }
