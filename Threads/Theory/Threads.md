@@ -145,6 +145,8 @@ A thread is considered **dead** (no longer alive) after the run() method complet
 
 ![image alt text](image_0.png)
 
+<br>
+
 ### The Thread Scheduler 
 
 **Part of JVM** (although most JVMs map Java threads directly to native threads on the underlying OS) that decides which thread should run at any given moment, and also takes threads out of the run state. 
@@ -178,6 +180,8 @@ t1.run();	t2.run();
 
 This causes the Worker.run() methods to execute sequentially and they will be in the same stack as main i.e. no new thread created. To execute these methods simultaneously, we call start() methods that eventually create a new thread with a new stack space.
 
+<br>
+
 ### Thread States and Transitions 
 
 **■ New State**
@@ -188,7 +192,7 @@ It is a live Thread object, but not yet a thread of execution. At this point, th
 
 ![image alt text](image_3.png)
 
-		|----------Alive---------|
+		|-------Alive------|
 
 ■ **Runnable** 
 
