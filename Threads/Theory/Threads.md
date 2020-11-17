@@ -216,8 +216,9 @@ Or the thread may be waiting because the thread's run code causes it to wait, in
 
 A thread is considered dead when its run() method completes. It may still be a viable Thread object, but no longer a separate thread of execution. A dead thread can never be brought back to life! Invoking start() on a dead Thread instance, gives a runtime exception. 
 
-### Preventing Thread Execution
+<br>
 
+### Preventing Thread Execution
 Cases when a thread leaves running state but not sent back to either runnable or dead  
 * Sleeping   
 * Waiting     
@@ -240,6 +241,8 @@ If some other Thread calls non static method t1.interrupt(), while the thread is
 **When a thread wakes up after sleep() expires, it will return to the runnable state and not the running state.**
 
 **Remember that sleep() is a static method of class Thread, so don't be fooled into thinking that one thread can put another thread to sleep.**
+
+<br>
 
 ### Thread Priorities 
 
@@ -299,15 +302,15 @@ So far, we've looked at three ways a running thread could leave the running stat
 
 ■ A call to join() Guaranteed to cause the current thread to stop executing until the thread it joins with (in other words, the thread it calls join() on) completes, or if the thread it's trying to join with is not alive, the current thread won't need to back out.
 
-Besides those three, following are scenarios in which a thread might leave the running state: 
+<br>
 
-■ The thread's run() method completes. 
+Besides those three, following are scenarios in which a thread might leave the running state:   
+■ The thread's run() method completes.   
+■ A call to wait() on an object (we don't call wait() on a thread).   
+■ A thread can't acquire the lock on the object whose method code it's attempting to run.   
+■ The thread scheduler can decide to move the current thread from running to runnable in order to give another thread a chance to run. No reason is needed—the thread scheduler can trade threads in and out whenever it likes.  
 
-■ A call to wait() on an object (we don't call wait() on a thread). 
-
-■ A thread can't acquire the lock on the object whose method code it's attempting to run. 
-
-■ The thread scheduler can decide to move the current thread from running to runnable in order to give another thread a chance to run. No reason is needed—the thread scheduler can trade threads in and out whenever it likes.
+<br>
 
 ### Thread Synchronization
 
