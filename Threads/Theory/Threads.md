@@ -420,6 +420,8 @@ Assume that read() is started by one thread and write() is started by another. I
 
 The preceding simple example is easy to fix; just swap the order of locking for either the reader or the writer at lines 16 and 17 (or lines 8 and 9). 
 
+<br>
+
 ### Inter-Thread Communication
 
 Inter-thread communication allows synchronized threads to communicate the status of an event with each other using a set of methods: wait(), notify(), and notifyAll(), which are all inherited from the Object class.
@@ -457,7 +459,7 @@ However, when notify() is called, that doesn't mean the thread gives up its lock
 
 **Exceptions Caused when using these methods**
 
-**1. IllegalMonitorStateException**
+**1. IllegalMonitorStateException**  
 **The methods wait() and notify(), remember, are instance methods of Object. If no object specified...it will be called on the current object.**
 
 **Now if the thread calling wait() does not own the lock on the object, it will throw an IllegalMonitorStateException. This exception is not a checked exception, so you don't have to catch it explicitly.**  
@@ -554,7 +556,11 @@ Which methods belong to which class
 **java.lang.Runnable**		run()  
 **java.lang.Thread**		**static—** sleep() and yield() **NonStatic—** join() and start()
 
+<br>
+
 TODO: countDownLatch, cyclic barrier
+
+<br>
 
 **Difference between sleep and wait in java**  
 [https://java2blog.com/difference-between-sleep-and-wait-in/](https://java2blog.com/difference-between-sleep-and-wait-in/)
@@ -755,11 +761,15 @@ By having multiple conditions for a lock, you can effectively categorize the thr
 
 Conditions can also be used when you can't use a BlockingQueue to coordinate the activities of two or more threads.
 
+<br>
+
 **[Difference between Semaphore and Condition (ReentrantLock)]**(https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock)
 
 [https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock](https://stackoverflow.com/questions/12641933/difference-between-semaphore-and-condition-reentrantlock)
 
 <br>
+<br>
+
 
 **ReentrantReadWriteLock**
 
@@ -848,20 +858,17 @@ Any mutating methods called on a copy-on-write–based Iterator or ListIterator 
 
 **You might have to use atomic variables, locks, synchronized code blocks, or immutable (readonly) objects to make objects referenced by a collection thread-safe.**
 
+<br>
+
 ### Concurrent Collections
 
 The java.util.concurrent package also contains several concurrent collections that can be concurrently read and modified by multiple threads, but without the copy-on-write behavior. 
 
-For example:
-
-■ ConcurrentHashMap 
-
-■ ConcurrentSkipListMap 
-
-■ ConcurrentSkipListSet
-
-■ ConcurrentLinkedDeque 
-
+For example:  
+■ ConcurrentHashMap   
+■ ConcurrentSkipListMap   
+■ ConcurrentSkipListSet  
+■ ConcurrentLinkedDeque   
 ■ ConcurrentLinkedQueue 
 
 
@@ -1224,9 +1231,11 @@ Submitting a Callable to an ExecutorService returns a Future reference. When you
 
 ![image alt text](image_63.png)
 
-**Note: I/O activities (use of System.out.println()) in your Runnable and Callable instances can be a serious bottleneck & you need to avoid repeated calls to println(). Solutions: 1) use StringBuilder to concatenate all output strings and have a single println() call before the call() method returns.**
+**Note: I/O activities (use of System.out.println()) in your Runnable and Callable instances can be a serious bottleneck & you need to avoid repeated calls to println(). Solutions:**      
+**1) use StringBuilder to concatenate all output strings and have a single println() call before the call() method returns.**   
+**2) use a logging framework (see java.util.logging) in place of any println() calls.**  
 
-**2) use a logging framework (see java.util.logging) in place of any println() calls.**
+<br>
 
 **ThreadLocalRandom** (A new way in Java 7 to create random numbers) 
 
@@ -1235,6 +1244,8 @@ Math.random() instances are thread-safe, but gives poor performance in a multi-t
 ThreadLocalRandom is a combination of ThreadLocal and Random classes, which is unique to the current thread. Thus, it works better performance in a multithreaded environment by simply avoiding any contention  – concurrent access to the Random objects.
 
 The random number obtained by one thread is not affected by the other thread, whereas java.util.Random provides random numbers globally.
+
+<br>
 
 **ExecutorService Shutdown**
 
@@ -1251,6 +1262,9 @@ Because the threads in an ExecutorService may be non-daemon threads, they may pr
 **[shutdownNow]**(https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html#shutdownNow--)** : **Attempts to stop all actively executing tasks and the tasks that were awaiting execution are drained (removed) from the task queue.
 
 The ExecutorService.shutdownNow() method will call Thread.interrupt() in an attempt to terminate any unfinished tasks. But there are no guarantees to stop actively executing tasks because any task that fails to respond to interrupts may never terminate
+
+<br>
+<br>
 
 JAVA Executor Framework
 
@@ -1305,25 +1319,20 @@ public class MyClass {
 
 <br>
 
-Difference between Runnable and Callable
-Callable is parameterized interface
-
+Difference between Runnable and Callable  
+Callable is parameterized interface  
 [https://howtodoinjava.com/java/multi-threading/java-callable-future-example/](https://howtodoinjava.com/java/multi-threading/java-callable-future-example/)
 
-Callable + Future
-
+Callable + Future  
 [https://howtodoinjava.com/java/multi-threading/executor-service-example/](https://howtodoinjava.com/java/multi-threading/executor-service-example/)
 
-CompletableFuture
-
+CompletableFuture  
 [https://www.callicoder.com/java-8-completablefuture-tutorial/](https://www.callicoder.com/java-8-completablefuture-tutorial/)
 
-BlockingQueue
-
+BlockingQueue  
 [https://howtodoinjava.com/java/multi-threading/how-to-use-blockingqueue-and-threadpoolexecutor-in-java/](https://howtodoinjava.com/java/multi-threading/how-to-use-blockingqueue-and-threadpoolexecutor-in-java/)
 
-Atomic Integer And Volatile to ensure thread safety
-
+Atomic Integer And Volatile to ensure thread safety  
 [https://dzone.com/articles/java-multi-threading-volatile-variables-happens-be-1](https://dzone.com/articles/java-multi-threading-volatile-variables-happens-be-1)
 
 <br>
