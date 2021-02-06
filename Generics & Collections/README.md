@@ -5,7 +5,7 @@
 
 Some important methods in class java.lang.Object :
 
-![noImage](./img/table_11-1.png)
+![noImage](./img_metadata/table_11-1.png)
 
 
 ### :point_right: The toString() Method
@@ -149,7 +149,7 @@ Now you need to retrieve the value that matches a given key. The hashcode tells 
 
 For example, key is a string value then the a possible hashcode algorithm could be : You take the string and calculate an integer code from it by using A is 1, B is 2, and so on, adding the numeric values of all the letters in the string together. 
 
-![Sorry. Image not loaded](./img/hashcode_example.png)
+![Sorry. Image not loaded](./img_metadata/hashcode_example.png)
 
 **Note:** Two different names might result in the same value. That's acceptable. The hashcode tells you only which bucket to go into. You'll still have to search through the target bucket, reading each name until we find the desired name.
 
@@ -199,7 +199,7 @@ So you must override both methods to be absolutely certain that your objects can
 - It is NOT required that if two objects are unequal according to the equals(java.lang.Object) method, then calling the hashCode() method on each of the two objects must produce distinct integer results.
 
 
-![Sorry. Image not loaded](./img/hashcode_equals_table.png)
+![Sorry. Image not loaded](./img_metadata/hashcode_equals_table.png)
 
 **What happens if you include a transient variable in your hashCode() method?**  
 As you might know, serialization saves an object so that it can be reanimated later by deserializing it back to full objectness. But transient variables are not saved when an object is serialized.
@@ -254,10 +254,10 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 **Key Interfaces and Classes of the Collections Framework**
 
 **The core interfaces:**  
-![Sorry. Image not loaded](./img/interfaces.png)
+![Sorry. Image not loaded](./img_metadata/interfaces.png)
 
 **The concrete implementation classes:**  
-![Sorry. Image not loaded](./img/concrete_classes.png)
+![Sorry. Image not loaded](./img_metadata/concrete_classes.png)
 
 
 **There are really three overloaded uses of the word "collection":**  
@@ -268,7 +268,7 @@ The Collections Framework in Java, gives you lists, sets, maps, and queues to sa
 
 - **Collections (capital C and ends with s)** is the java.util.Collections class that holds a pile of static utility methods for use with collections.
 
-![Sorry. Image not loaded](./img/interface_class_hierarchy.png)
+![Sorry. Image not loaded](./img_metadata/interface_class_hierarchy.png)
 
 **:question: Why do the List and Collection interfaces declare the same methods?**  
 As to why List repeats the declarations of the Collection methods, that is because it refines the contracts of many of those methods. For example, the boolean add(E element) method in Collection interface only guarantees that after being called the collection will contain the element. The List interface refines this contract, specifying that the element will be added to the end of the list.  
@@ -297,7 +297,7 @@ Most of the refinements are simply dealing with the fact that Lists are guarante
 **Maps** *Things with a unique ID (classes that implement Map)*  
 **Queues** *Things arranged by the order in which they are to be processed*  
 
-![Sorry. Image not loaded](./img/figure_11-3.png)
+![Sorry. Image not loaded](./img_metadata/figure_11-3.png)
 
 
 ### :point_right: Ordered & Sorted Collections
@@ -385,7 +385,7 @@ Since the LinkedList class has been enhanced to implement the Queue interface, b
 **:bulb: Thus when you poll elements from the Priority Queue, they come out according to priority from highest to lowest. But if you use an iterator to traverse on this queue, then the order is not guaranteed as iterator just traverses the array which stores the heap.**
 
 
-![Sorry. Image not loaded](./img/table_11-2.png)
+![Sorry. Image not loaded](./img_metadata/table_11-2.png)
 
 
 
@@ -739,7 +739,7 @@ In addition, the Arrays.sort() method (the one argument version), is overloaded 
 **Remember:** The sort() methods for both the Collections class and the Arrays class are static methods, and that they alter the objects they are sorting instead of returning a different sorted object.  
 
 
-![Sorry. Image not loaded](./img/table_11-3.png)
+![Sorry. Image not loaded](./img_metadata/table_11-3.png)
 
 **Note:** Whenever you want to sort an array or a collection, the elements inside must all be mutually comparable. For example, if you have an Object[] and you put Cat and Dog objects into it, you won't be able to sort it. In general, objects of different types should be considered NOT mutually comparable unless specifically stated otherwise.  
 
@@ -1179,7 +1179,7 @@ Similarly, TreeMap provides pollFirstEntry() and pollLastEntry() to retrieve and
 **Descending Order**  
 The important methods are TreeSet.descendingSet() and TreeMap.descendingMap() that return a collection in the reverse order of the collection on which the method was invoked. 
 
-![Sorry. Image not loaded](./img/table_11-4.png)
+![Sorry. Image not loaded](./img_metadata/table_11-4.png)
 
 #### Backed Collections
 Some of the classes in the java.util package support the concept of "backed collections." Let’s go through an example:
@@ -1238,7 +1238,7 @@ All of the methods we've been discussing here have an overloaded version that's 
 
 When these methods are invoked with end point and boolean arguments, the boolean always means "is inclusive". Unless specifically indicated by a boolean argument, a subset's starting point will always be inclusive. 
 
-![Sorry. Image not loaded](./img/table_11-5.png)
+![Sorry. Image not loaded](./img_metadata/table_11-5.png)
 
 **Note:** Let’s say that you’ve created a backed collection using either a tailXxx() or subXxx() method. Remember that the pollFirstXxx() methods will always remove the first entry from the collection on which they’re invoked, but they will remove an element from the other collection only if it has the same value. 
 
@@ -1310,9 +1310,9 @@ Finally, we review the remaining elements in the queue.
 **NOTE:** The important PriorityQueue methods are offer() (which is similar to add()), peek() (which retrieves the element at the head of the queue but doesn’t delete it), and poll() (which retrieves the head element and removes it from the queue).
 
 
-![Sorry. Image not loaded](./img/table_11-6.png)
+![Sorry. Image not loaded](./img_metadata/table_11-6.png)
 
-![Sorry. Image not loaded](./img/table_11-7.png)
+![Sorry. Image not loaded](./img_metadata/table_11-7.png)
 
 
 
